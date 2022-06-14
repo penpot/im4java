@@ -48,10 +48,12 @@ public class IdentifyCmd extends ImageCommand {
 
   public  IdentifyCmd() {
     super();
-    if (!Boolean.getBoolean("im4java.useGM")) {
-      setCommand("identify");
-    } else {
+    if (Boolean.getBoolean("im4java.useGM")) {
       setCommand("gm","identify");
+    } else if (Boolean.getBoolean("im4java.useV7")) {
+      setCommand("magick", "identify");
+    } else {
+      setCommand("identify");
     }
   }
 
@@ -65,6 +67,8 @@ public class IdentifyCmd extends ImageCommand {
     super();
     if (useGM) {
       setCommand("gm","identify");
+    } else if (Boolean.getBoolean("im4java.useV7")) {
+      setCommand("magick", "identify");
     } else {
       setCommand("identify");
     }

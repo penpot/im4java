@@ -39,12 +39,14 @@ public class ConvertCmd extends ImageCommand {
      Constructor.
   */
 
-  public  ConvertCmd() {
+  public ConvertCmd() {
     super();
-    if (!Boolean.getBoolean("im4java.useGM")) {
-      setCommand("convert");
-    } else {
+    if (Boolean.getBoolean("im4java.useGM")) {
       setCommand("gm","convert");
+    } else if (Boolean.getBoolean("im4java.useV7")) {
+      setCommand("magick");
+    } else  {
+      setCommand("convert");
     }
   }
 
@@ -58,6 +60,8 @@ public class ConvertCmd extends ImageCommand {
     super();
     if (useGM) {
       setCommand("gm","convert");
+    } else if (Boolean.getBoolean("im4java.useV7")) {
+      setCommand("magick");
     } else {
       setCommand("convert");
     }
