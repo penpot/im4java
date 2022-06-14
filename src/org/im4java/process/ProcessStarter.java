@@ -236,6 +236,7 @@ public class ProcessStarter {
 
      @deprecated use {@link #addProcessEventListener} instead
    */
+  @Deprecated
   public void addProcessListener(ProcessListener pProcessListener) {
     iProcessListener.add(pProcessListener);
   }

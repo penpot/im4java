@@ -32,6 +32,7 @@ package org.im4java.process;
    @deprecated This interface has been superseeded by ProcessEventListener
  */
 
+@Deprecated
 public interface ProcessListener {
 
   //////////////////////////////////////////////////////////////////////////////
