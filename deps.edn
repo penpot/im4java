@@ -4,4 +4,13 @@
  :aliases
  {:build
   {:extra-deps {io.github.clojure/tools.build {:git/tag "v0.8.2" :git/sha "ba1a2bf"}}
-   :ns-default build}}}
+   :ns-default build}
+
+  :dev
+  {:extra-deps
+   {com.bhauman/rebel-readline {:mvn/version "RELEASE"},
+    org.clojure/tools.namespace {:mvn/version "RELEASE"}}}
+
+  :repl
+  {:main-opts  ["-m" "rebel-readline.main"]}}}
+
