@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.2 $
+  $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>Roadmap</title>
+  </header>
+
+  <body>
+    <section id="future">
+      <title>Future Plans</title>
+
+      <p>
+	The following releases will feature:
+      </p>
+      <ul>
+	<li>update interface definitions (catch up with new options)</li>
+	<li>do some benchmarking to support a better decision between JMagick
+	  and im4java</li>
+	<li>integration with java buildtools (e.g. ant and maven)</li>
+	<li>support of additional commandline tools (suggestions welcome)</li>
+	<li>add example programs</li>
+	<li>use JMagick/GMagick-JNI as backend (if feaseable)</li>
+      </ul>
+    </section>
+
+  </body>
+</document>

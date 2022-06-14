@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Prepare the environment for testing
+#
+# $Author: bablokb $
+# $Revision: 1.1 $
+#
+# License: GPL2
+# -----------------------------------------------------------------------------
+
+rm -fr images
+cp -a images.src images
+cp -a "images/tulip2.jpg" "images/tulip 2.jpg"
+chmod +w images/*.jpg

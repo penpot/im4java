@@ -1,0 +1,1001 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.23 $
+  $Author: bablokb $
+-->
+
+<document id="devguide">
+  <header>
+    <title>Developer's Guide</title>
+  </header>
+
+  <body>
+    <section id="intro">
+      <title>Introduction</title>
+
+      <p>
+	This guide is an introduction to the im4java-library. You
+	should be familiar with java-programming and should know how
+	to read the <a href="ext:im4javaapi">API
+	  documentation</a>. Also, this is no guide for the usage of
+	the underlying tools (<a
+	  href="ext:imagemagick">ImageMagick</a>, <a
+	  href="ext:graphicsmagick">GraphicsMagick</a> and so on). You
+	should be familiar with them and know how to read the
+	respective documentation.
+      </p>
+      <p>
+	The basic architecture of im4java is quite simple. It boils
+	down to calling all underlying tools simply by using a
+	<code>ProcessBuilder</code>-object. All the magic of im4java ist
+	to hide the complexities. If you have just one simple call of
+	an external tool in your program, you might be better of by
+	hardcoding the <code>ProcessBuilder</code>-call yourself. If you
+	don't need the simplicity or the advanced features of the
+	im4java-library, your code will certainly be faster and more
+	efficient.
+      </p>
+    </section>
+
+    <section id="environment">
+      <title>Before you begin: Setting up the Environment</title>
+      <p>
+	To use the im4java-library, you should add the im4java-jarfile
+	to you classpath. This is the first part of the setup. The
+	second part is optional and only necessary, if the <a
+	  href="../tools/index.html">tools</a> you want to use
+	(e.g. <code>convert</code> or <code>exiftool</code>) are not
+	on your <em>PATH</em>. This is typically a problem on
+	Windows-systems. 
+      </p>
+      <p>
+	To setup your searchpath for the tools you have three options:
+      </p>
+      <ul>
+	  <li>
+	    Set the environment-variable
+	    <em>IM4JAVA_TOOLPATH</em>. This variable should contain a
+	    list of directories to search for your tools separated by
+	    your platform-pathdelemiter (on *NIX typically ":", on
+	    Windows ";").
+	  </li>
+	  <li>
+	    Globally set the searchpath from within your java-progam:
+	    <source>
+String myPath="C:\\Programs\\ImageMagick;C:\\Programs\\exiftool";
+ProcessStarter.setGlobalSearchPath(myPath);
+	    </source>
+	    This will override any values set with
+	    <em>IM4JAVA_TOOLPATH</em>. 
+	  </li>
+	  <li>
+	    Set the search path for an individual command:
+	    <source>
+String imPath="C:\\Programs\\ImageMagick";
+ConvertCmd cmd = new ConvertCmd();
+cmd.setSearchPath(imPath);
+	    </source>
+	    This will override any values set with
+	    <em>IM4JAVA_TOOLPATH</em> or with
+	    <code>ProcessStarter.setGlobalSearchPath()</code>.
+	  </li>
+	</ul>
+      <warning>
+	Note that I also encountered a problem using OpenJDK with a
+	language-setting of <em>LANG=de_DE.UTF-8</em>. With
+	<em>LANG=C</em> everything worked fine. With SUN's JDK, there
+	were no problems regardless of the language-setting.
+      </warning>
+    </section>
+
+    <section id="simpleUse">
+      <title>Simple Use</title>
+      <p>
+	Basically, to use im4java, you need objects of two classes: an
+	<code>ImageCommand</code> like <code>ConvertCmd</code>, and an
+	<code>Operation</code> like <code>IMOperation</code>. The
+	<code>ImageCommand</code> is more or less static, you would
+	create an instance once and reuse it for the lifetime of your
+	program. Exceptions to this rule are more advanced use
+	cases, see the section below about parallel processing. In
+	contrast, the <em>Operation</em> is the object 
+	wrapping all the commandline options you intend to pass to the
+	given command. So you would typically create one
+	<code>Operation</code> for every action (resizing, conversion)
+	you intend to do.
+      </p>
+
+      <p>
+	As an example, consider resizing an image:
+      </p>
+      <source>
+// create command
+ConvertCmd cmd = new ConvertCmd();
+
+// create the operation, add images and operators/options
+IMOperation op = new IMOperation();
+op.addImage("myimage.jpg");
+op.resize(800,600);
+op.addImage("myimage_small.jpg");
+
+// execute the operation
+cmd.run(op);
+      </source>
+    </section>
+
+    <section id="imageCommands">
+      <title>About ImageCommand</title>
+      <p>
+	All command-classes subclass <code>ImageCommand</code>, which
+	itself subclasses
+	<code>org.im4java.process.ProcessStarter</code>. The latter
+	class wraps <code>java.lang.ProcessBuilder</code>, handles
+	input and output streams and supports <a
+	  href="#asynchronousExecution">asynchronous execution</a>.  
+      </p>
+      <p>
+	The <code>ImageCommand</code> class adds methods useful for
+	all command-classes, things like support for <a
+	  href="#reusingOperations">reusing operations</a> or for <a
+	  href="#dynamicOperations">dynamic operations</a>. 
+      </p>
+      <p>
+	Note that <code>ImageCommand</code> is not stateless. In the
+	default setting, it captures everything written to stderr. It
+	also holds an internal <em>process ID</em> (unrelated to any
+	operating system PID) via
+	<code>ProcessStarter</code>. Nevertheless, if you only use the
+	<code>ImageCommand</code> in synchronous mode, you can reuse
+	the instance.
+      </p>
+    </section>
+
+    <section id="graphicsMagick">
+      <title>Using GraphicsMagick</title>
+      <p>
+	<a href="ext:graphicsmagick">GraphicsMagick</a> is a fork of
+	<a href="ext:imagemagick">ImageMagick</a>. GraphicsMagick has
+	a number of advantages compared to ImageMagick, the most
+	prominent is it's superior performance. Since the fork
+	ImageMagick has improved the expressive power of it's
+	command-line syntax, therefore, an ImageMagick commandline is
+	not necessarely compatible with GraphicsMagick. But for most
+	single-operation conversions it still is.
+      </p>
+      <p>
+	With im4java, you have three options if you want to use
+	GraphicsMagick: 
+      </p>
+      <ul>
+	<li>
+	  use GraphicsMagick explicitely, passing the command at
+	  object-creation: <code>GraphicsMagickCmd cmd = new
+	    GraphicsMagickCmd("convert");</code>. 
+	</li>
+	<li>
+	  use GraphicsMagick explicitely, using wrapper classes:
+	  <code>ConvertCmd cmd = new ConvertCmd(true);</code>.
+	</li>
+	<li>
+	  decide at runtime: setting the system-property
+	  <em>im4java.useGM</em> to true will select GraphicsMagick
+	  at runtime. You can use this feature to compare the
+	  results and timings of both toolsets, provided that the
+	  commandline is compatible.
+	</li>
+      </ul>
+    </section>
+
+    <section id="reusingOperations">
+      <title>Reusing Operations</title>
+      <p>
+	In the example <a href="#simpleUse">above</a>, image-names
+	were hard-coded. The 
+	im4java-library supports an alternative use. Instead of
+	hard-coding the image-names, you just add placeholders and
+	resolve the image-names at execution time. This allows the
+	reuse of operations for example within a loop.
+      </p>
+      <p>
+	The following example extends the example of the first section
+	and loops over all images passed as method parameters:
+      </p>
+      <source>
+public void resizeImages(String... pImageNames) {
+  // create command
+  ConvertCmd cmd = new ConvertCmd();
+
+  // create the operation, add images and operators/options
+  IMOperation op = new IMOperation();
+  op.addImage();
+  op.resize(800,600);
+  op.addImage();
+
+  for (String srcImage:pImageNames) {
+    int lastDot = srcImage.lastIndexOf('.');
+    String dstImage = 
+       srcImage.substring(1,lastDot-1)+"_small.jpg";
+    cmd.run(op,srcImage,dstImage);
+  }
+}
+      </source>
+      <p>
+	You can pass an arbitrary
+	number of image-names to <code>cmd.run()</code>, you can even
+	pass an array of image-names. In the latter case you have to
+	cast the array to <code>Object[]</code>,
+	e.g. <code>cmd.run(op,(Object[]) imgNames)</code>.
+      </p>
+
+      <p>
+	Note that <code>op.addImage()</code> is actually a short form
+	for <code>op.addImage(Operation.IMG_PLACEHOLDER)</code>. You
+	can also add more than one placeholder at the same time with
+	<code>op.addImage(int count)</code>. 
+      </p>
+
+      <p>
+	The <code>op.addImage(String... images)</code>-method also
+	supports ImageMagick's <em>read-modifiers</em>. Adding a
+	read-modifier for hard-coded images is of course
+	straightforward (you just add it to the argument string). For
+	placeholders, you add only the read-modifier. The following
+	two lines of code therefore have the same effect:
+      </p>
+      <source>
+op.addImage("[300x200]");
+op.addImage(Operation.IMG_PLACEHOLDER+"[300x200]");
+      </source>
+
+      <p>
+	The test-case class <code>org.im4java.test.TestCase7</code>
+	uses read-modifiers to crop the source-images prior to
+	composing them:
+      </p>
+
+      <source>
+IMOperation op = new IMOperation();
+op.blend(50);
+op.addImage("[300x200+0+0]");  // read and crop first image
+op.addImage("[300x200+0+0]");  // read and crop second image
+op.addImage();                 // output image
+
+CompositeCmd composite = new CompositeCmd();
+composite.run(op,"rose1.jpg","rose2.jpg",outfile);
+      </source>
+
+    </section>
+
+    <section id="AddingOperations">
+      <title>Adding Operations to Operations</title>
+      <p>
+	Im4java supports a second variant of operation-reuse. You can
+	define one <code>Operation</code> and just add it to another
+	one. The following snippet defines a
+	<em>rotate-resize-frame</em>-operation and adds it to another
+	operation: 
+      </p>
+	<source>
+IMOperation frame = new IMOperation();
+frame.rotate("90");
+frame.resize(640);
+frame.border(10,10);
+
+IMOperation row = new IMOperation();
+row.addImages(3);
+row.add(frame);
+row.p_append();
+	</source>
+      <p>
+	Adding operations as just described is valid for all
+	supported im4java-tools. <a
+	  href="ext:imagemagick">ImageMagick</a> additionally supports
+	options and operations within parenthesis thus limiting the
+	effect of settings and operators on everything within the
+	parenthesis. You add parenthesis with the methods
+	<code>op.openOperation()</code> and
+	<code>op.closeOperation()</code>:  
+      </p>
+	<source>
+IMOperation frame = new IMOperation();
+frame.openOperation();
+frame.rotate("90");
+frame.resize(640);
+frame.border(10,10);
+frame.closeOperation();
+	</source>
+      <p>
+	An alternatative way of coding this is:
+      </p>
+	<source>
+IMOperation frame = new IMOperation();
+frame.rotate("90");
+frame.resize(640);
+frame.border(10,10);
+
+IMOperation row = new IMOperation();
+row.addImages(3);
+row.addSubOperation(frame);
+row.p_append();
+	</source>
+      <p>
+	The <code>op.addSubOperation()</code>-method just adds the
+	surrounding parenthesis.
+      </p>
+    </section>
+
+    <section id="dynamicOperations">
+      <title>Dynamic Operations</title>
+      <p>
+	<em>Dynamic Operations</em> are an advanced
+	technique. Sometimes you only want to apply some operations to
+	images fulfilling some requirements. <a
+	  href="ext:imagemagick">ImageMagick</a> itself has some
+	special option-flags for this purpose, e.g. an image is only
+	scaled (down) if it has a larger size than the
+	target-size. For special cases not directly supported by
+	ImageMagick, you can make use of im4java's <em>Dynamic
+	  Operations</em>. Basically, you implement the interface
+	<code>org.im4java.core.DynamicOperation</code>, which has
+	exactly one method <em>resolveOperation()</em>. At execution
+	time, this method gets all argument images passed as
+	parameters, and it must return an <code>Operation</code>. The
+	returned object could also be <em>null</em>, in this case no
+	<code>Operation</code> is added.
+      </p>
+      <p>
+	The test-case class <code>org.im4java.test.TestCase11</code>
+	shows an example of dynamic operations. In this case, the
+	<code>despeckle()</code> method is only added for images with
+	a high iso-noise level.
+      </p>
+    </section>
+
+    <section id="capturingOutput">
+      <title>Capturing Output</title>
+      <p>
+	The default behaviour of all <code>ImageCommand</code>s is to
+	pass all output of the wrapped commands to stdout, and to
+	capture everything from stderr in an
+	<code>CommandException</code>-object. You can change this
+	behaviour with the methods
+	<code>ImageCommand.setOutputConsumer(OutputConsumer oc)</code>
+	and <code>ImageCommand.setErrorConsumer(ErrorConsumer
+	  ec)</code>. Both <code>OutputConsumer</code> and
+	<code>ErrorConsumer</code> are interfaces in the
+	<code>org.im4java.process</code>-package with single methods
+	(<code>consumeOutput()</code> and
+	<code>consumeError()</code>). These methods just read
+	everything from the argument <code>InputStream</code>.
+      </p>
+      <p>
+	In the process-package there is an utility-class called
+	<code>ArrayListOutputConsumer</code> which collects all lines
+	of output in a String-array.
+      </p>
+    </section>
+
+    <section id="piping">
+      <title>Piping</title>
+      <p>
+	Most commandline tools allow piping of input or output. With
+	the im4java-library you can create instances of
+	<code>org.im4java.process.Pipe</code> to mimic this
+	behaviour. This class implements the
+	<code>OutputConsumer</code> and
+	<code>ErrorConsumer</code>-interfaces mentioned above and are
+	useful for 
+	piping the output of a commandline tool to an
+	<code>OutputStream</code> (e.g. a network-socket). To use the
+	pipe, instantiate it with an <code>OutputStream</code> and use
+	the method <code>ImageCommand.setOutputConsumer(pipe)</code>.
+      </p>
+      <p>
+	If you want to provide input to stdin of a commandline tool,
+	you have to create a pipe-object initialized with an
+	<code>InputStream</code> and use the method
+	<code>ImageCommand.setInputProvider(pipe)</code>. The pipe
+	will read from the <code>InputStream</code> and write to the
+	stdin of the respective <code>ImageCommand</code>.
+      </p>
+      <p>
+	The test-case <code>org.im4java.test.TestCase10</code>
+	features pipes, reading from one image and writing to
+	another. In real-life, you would of course process the files
+	directly, but the example just wants to demonstrate what to do:
+      </p>
+      <source>
+ IMOperation op = new IMOperation();
+ op.addImage("-");                   // read from stdin
+ op.addImage("tif:-");               // write to stdout in tif-format
+
+// set up pipe(s): you can use one or two pipe objects
+FileInputStream fis = new FileInputStream(iImageDir+"ipomoea.jpg");
+FileOutputStream fos = new FileOutputStream(iImageDir+"ipomoea.tif");
+// Pipe pipe = new Pipe(fis,fos);
+Pipe pipeIn  = new Pipe(fis,null);
+Pipe pipeOut = new Pipe(null,fos);
+
+// set up command
+ConvertCmd convert = new ConvertCmd();
+convert.setInputProvider(pipeIn);
+convert.setOutputConsumer(pipeOut);
+convert.run(op);
+fis.close();
+fos.close();
+      </source>
+    </section>
+
+    <section id="bufferedImages">
+      <title>Using BufferedImages</title>
+      <p>
+	A <code>BufferedImage</code> is in a way the <em>java
+	  native</em> representation of an image-object. No
+	commandline tool can deal directly with a
+	<code>BufferedImage</code>. The good news is that im4java uses
+	objects of type <code>BufferedImage</code> transparently, if
+	you use pass these objects at invocation time:
+      </p>
+      <source>
+IMOperation op = new IMOperation();
+op.addImage();                        // input
+op.blur(2.0).paint(10.0);
+op.addImage();                        // output
+
+ConvertCmd convert = new ConvertCmd();
+BufferedImage img = ...;
+String outfile = ...;
+...
+convert.run(op,img,outfile);
+      </source>
+      <p>
+	Note that the above use of <code>BufferedImage</code>s
+	works fine for input-images.
+	If you need to write to a <code>BufferedImage</code>, you must
+	pipe the output of the commandline-tool to stdout,
+	create an instance of the class 
+	<code>org.im4java.core.Stream2BufferedImage</code> and set it
+	as the <code>OutputConsumer</code> of the command:
+      </p>
+      <source>
+IMOperation op = new IMOperation();
+op.addImage();                        // input
+....
+op.addImage("png:-");                 // output: stdout
+...
+images = ...;	
+	
+// set up command
+ConvertCmd convert = new ConvertCmd();
+Stream2BufferedImage s2b = new Stream2BufferedImage();
+convert.setOutputConsumer(s2b);
+
+// run command and extract BufferedImage from OutputConsumer
+convert.run(op,(Object[]) images);
+BufferedImage img = s2b.getImage();
+      </source>
+    </section>
+
+    <section id="asynchronousExecution">
+      <title>Asynchronous Execution</title>
+      <p>
+	Long running operations belong into a seperate thread,
+	especially in graphical applications. The im4java-library
+	supports asynchronous execution with and without callbacks.
+      </p>
+      <p>
+	The latter case is simple (fire-and-forget). Befor you start the
+	command, you just set the aynchronous-mode to true:
+      </p>
+      <source>
+ConvertCmd cmd = new ConvertCmd();
+cmd.setAsyncMode(true);
+...
+cmd.run(op);
+      </source>
+      <p>
+	In this case, you will know nothing about success or
+	failure. If you need feedback (e.g. because you want to
+	asynchronously convert a file and load the result into a
+	window), you must write a class implementing the interface
+	<code>org.im4java.process.ProcessEventListener</code>. This
+	interface defines three methods:
+	<code>processInitiated()</code>, <code>processStarted()</code>
+	and <code>processTerminated()</code>. The first method is
+	called synchronously from the original thread calling the
+	run-method, the latter two methods are callbacks from the
+	asynchronous thread. See
+	<code>org.im4java.test.TestCase16</code> for a complete example.
+      </p>
+
+      <p>
+	With <code>cmd.setAsyncMode(true)</code> you only need minimal
+	code-changes for asynchronous execution. If you prefer to
+	control the flow of execution yourself, you could use some
+	standard methods from <code>java.util.concurrent</code> to
+	control execution:
+      </p>
+
+      <source>
+ProcessTask pt = cmd.getProcessTask(op);
+ExecutorService exec = Executors.newSingleThreadExecutor();
+exec.execute(pt);
+exec.shutdown();
+      </source>
+      
+      <p>
+	The test-case 16a will give you a complete example. The third
+	variant, test-case 16b replaces the standard executor returned
+	by <code>Executors.newSingleThreadExecutor()</code> with an
+	instance of class
+	<code>org.im4java.process.ProcessExecutor</code>. For a
+	discussion of this class, proceed to the next section.
+      </p>
+    </section>
+
+    <section id="parallelProcessing">
+      <title>Parallel Processing</title>
+      <p>
+	The use case described above is fine for typical graphical
+	applications with one asynchronous thread. In contrast, if you
+	want to convert a number of files asynchronously, additional
+	problems arise. Consider the following piece of code:
+      </p>
+      <source>
+// load images into an array, e.g. from a directoy
+ArrayList&lt;String&gt; images = load(myDir);
+
+// convert all images
+ConvertCmd cmd = new ConvertCmd();
+cmd.setAsyncMode(true);
+Operation op = ...;
+for (String img:images) {
+  String outfile = ...;
+  cmd.run(op,img,outfile);
+}
+      </source>
+      <p>
+	Although this will run perfectly fine, this code will flood
+	your system with parallel convert-processes, making your
+	system unusable for a while. So one of the issues is
+	<em>ressource management</em>. Another issue is that you don't
+	know when you are finished. In addition, you don't know which
+	of your conversions succeeded and which failed.
+      </p>
+
+      <p>
+	The following sections deal with these three issues. This is
+	advanced stuff, and you might not even need it. If you have to
+	convert multiple images, you could first try to use the class
+	<code>org.im4java.utils.BatchConverter</code>, which uses the
+	building blocks described below. The class
+	<code>BatchConverter</code> is covered <a
+	  href="#BatchConverter">here</a>. 
+      </p>
+
+      <section id="processExecutor">
+	<title>The ProcessExecutor</title>
+
+	<p>
+	  The classes in <code>java.util.concurrent</code> address
+	  these issues. All classes returned by the factory class
+	  <code>java.util.concurrent.Executors</code> operate on
+	  threads. They provide methods to queue and start requests up
+	  to a given limit, and also allow you to stop the queue and
+	  destroy running threads.
+	</p>
+
+	<p>
+	  There is one big drawback with these thread-based
+	  executors. Once an <code>ImageCommand</code> is running
+	  within a java-thread, the thread will not be killable due to
+	  the active process. Therefore you should not use any of the
+	  standard executors, but use an instance of the class
+	  <code>org.im4java.process.ProcessExecutor</code>. A basic
+	  usage is very simple, the example above then looks like
+	  this:
+	</p>
+	<source>
+// load images into an array, e.g. from a directoy
+ArrayList&lt;String&gt; images = load(myDir);
+
+// convert all images
+ProcessExecutor exec = new ProcessExecutor();
+Operation op = ...;
+for (String img:images) {
+  String outfile = ...;
+  ConvertCmd cmd = new ConvertCmd();
+  ProcessTask pt = cmd.getProcessTask(op,img,outfile);
+  exec.execute(pt);
+}
+exec.shutdown();
+	</source>
+	<p>
+	  The default constructor of <code>ProcessExecutor</code> will
+	  query the number of processors on the system and limit the
+	  number of parallel running processes to that number. You can
+	  also pass an integer to the constructor if you want to set
+	  the limit yourself.
+	</p>
+
+	<p>
+	  The class <code>ProcessTask</code> extends
+	  <code>java.util.concurrent.FutureTask</code>. You can use
+	  all the standard methods of this class, e.g. to query
+	  results or to wait for termination.
+	</p>
+      </section>
+
+      <section id="processTermination">
+	<title>Waiting for process termination</title>
+	
+	<p>
+	  It is usually important to know when your processes have
+	  finished, maybe to give feedback to a user by updating a
+	  progress bar or to start some follow-up activity. If the
+	  processes take too long, you might also consider killing
+	  them.
+	  </p>
+	
+	<p>
+	  Since <code>ProcessExecutor</code> extends
+	  <code>java.util.concurrent.ThreadPoolExecutor</code>, you
+	  can use the standard methods provided by this class. If you
+	  want to block until your processes terminate, you would use
+	  the following code snippet (this one extends the example above):
+	  </p>
+	<source>
+ProcessExecutor exec = new ProcessExecutor();
+for (String img:images) {
+...
+}
+exec.shutdown();
+if (exec.awaitTermination(10,TimeUnit.SECONDS)) {
+  System.err.println("processes terminated on their own");
+} else {
+  System.err.println("trying to cancel all running processes ...");
+  exec.shutdownNow();
+}
+	</source>
+	<p>
+	  As an alternative to the blocking
+	  <code>awaitTermination()</code>-call you could also subclass
+	  <code>ProcessExecutor</code> and implement it's
+	  <code>terminated()</code>-method. Then you will receive a
+	  callback once all processes have terminated.
+	</p>
+
+	<p>
+	  One final warning: the code implementing the parallel
+	  processing of commands is new and therefore untested in the
+	  wild. During development, a number of race-conditions came
+	  up (and were solved), but feedback on stability,
+	  functionality and implementation is highly welcome.
+	</p>
+      </section>
+
+      <section id="processControl">
+	<title>Exit status of finished asynchronous processes</title>
+	<p>
+	  The last issue with asynchronous processes is the exit
+	  status. For a single asynchronous process this is quite
+	  simple, you would implement a
+	  <code>ProcessEventListener</code> and use it's
+	  <code>processTerminated()</code>-method (see the section <a
+	    href="#asynchronousExecution">Asynchronous Execution</a> above).
+	</p>
+	
+	<p>
+	  For multiple parallel process the situation is a bit more
+	  complicated. You have to link the processTerminated-event
+	  with the correct process. The class
+	  <code>ProcessEvent</code> implements a number of methods
+	  which help to identify the process. One is
+	  <code>ProcessEvent.getPID()</code>. The <em>PID</em> is an
+	  internal field of each <code>ImageCommand</code>. You can
+	  set this field explicitly overriding the PID set during
+	  object-creation. You can also query the
+	  <code>ImageCommand</code> object itself with
+	  <code>ProcessEvent.getProcessStarter()</code> (remenber that
+	  <code>ProcessStarter</code> is the base-class of
+	  <code>ImageCommand</code>). 
+	</p>
+	
+	<p>
+	  For a complete example using these methods, see the class
+	  <code>org.im4java.test.TestCase21</code>. 
+	</p>
+      </section>
+    </section>
+
+    <section id="utils">
+      <title>Utilities</title>
+      <p>
+	This section describes a number of utility-classes which
+	facilitate the coding.
+      </p>
+
+      <section id="Info">
+	<title>Image Information</title>
+	<p>
+	  If you only want to query image-information (e.g. width and
+	  height), you could typically use the class
+	  <code>IdentifyCmd</code>, wrapping ImageMagick's
+	  <em>identify</em>-command. Instead of using this class
+	  directly, you could instead use the <code>Info</code> class. The
+	  following code-snippet demonstrates its use:
+	</p>
+	<source>
+Info imageInfo = new Info(filename,true);
+System.out.println("Format: " + imageInfo.getImageFormat());
+System.out.println("Width: " + imageInfo.getImageWidth());
+System.out.println("Height: " + imageInfo.getImageHeight());
+System.out.println("Geometry: " + imageInfo.getImageGeometry());
+System.out.println("Depth: " + imageInfo.getImageDepth());
+System.out.println("Class: " + imageInfo.getImageClass());
+	</source>
+	<p>
+	  The second parameter (<em>true</em>) in the example requests
+	  <em>basic</em>-information. This is a bit faster than
+	  requesting and parsing the
+	  complete (verbose) output of the class
+	  <code>IndentifyCmd</code>. See the test-case class
+	  <code>org.im4java.test.TestCase8</code> for a complete example.
+	</p>
+	<p>
+	  Prior to version 1.3.0 the implementation of the
+	  <code>Info</code>-class was severely flawed. It did not take
+	  into account that there are image-formats like TIF or GIF
+	  that support multiple images (ImageMagick calls them
+	  <em>scenes</em>) within a single file. As a consequence, the
+	  method
+	</p>
+	<source>
+imageInfo.getImageWidth()
+	</source>
+	<p>
+	  returns the image-width of the <em>first</em> scene (from
+	  basic-information), whereas the method
+	</p>
+	<source>
+imageInfo.getProperty("Width")
+	</source>
+	<p>
+	  will return the image-width of the <em>last</em>
+	  scene (from complete information). Starting with version
+	  1.3.0, there are new methods with an additional parameter,
+	  the scene-number, e.g. 
+	</p>
+	<source>
+imageInfo.getImageWidth(3)
+imageInfo.getProperty("Width",3)
+	</source>
+	<p>
+	  To query the number of scenes use the method
+	  <code>getSceneCount()</code>. Note that information about
+	  multiple scenes is only available with complete-information.
+	</p>
+	<p>
+	  Note that parsing the output of <code>identify
+	    -verbose</code> is inherently flawed, since this output is
+	  meant to be human-readable and not an an interface for computer
+	  programs. The parser makes a number of assumptions about the
+	  output, some of them are known to be incorrect in special
+	  situations (e.g. multi-line attribute-values with embedded
+	  colons). Also note that basic-information should always be
+	  correct, since it uses a different method to aquire the
+	  information. As an alternative to the
+	  <code>Info</code>-class you might consider using the wrapper
+	  class <code>ExiftoolCmd</code> for <code>exiftool</code>.
+	</p>
+      </section>
+
+      <section id="FilenameLoader">
+	<title>FilenameLoader</title>
+	<p>
+	  The class <code>org.im4java.utils.FilenameLoader</code> is
+	  useful for batch-processing a number of files from a
+	  directory. The core method is <code> public
+	    List&lt;String&gt; loadFilenames(String pDir)</code>. It
+	  loads all files from the given directory into a list of
+	  strings.
+	</p>
+	<p>
+	  The constructor accepts an <code>ExtensionFilter</code>. You
+	  can instantiate your own filter as in the example below or
+	  use one of the predefined filters of the
+	  ExtensionFilter-class. 
+	</p>
+	<source>
+ExtensionFilter filter = new ExtensionFilter("jpg");
+filter.setRecursion(true);
+filter.ignoreDotDirs(true);
+FilenameLoader  loader = new FilenameLoader(filter);
+List&lt;String&gt; files = loader.loadFilenames(mydir);
+	</source>
+	<p>
+	  As always, you should check the <a
+	    href="ext:im4javaapi">API-documentation</a> for all the
+	  features of this class.
+	</p>
+      </section>
+
+      <section id="FilenamePatternResolver">
+	<title>FilenamePatternResolver</title>
+	<p>
+	  When converting multiple files, the target filename usually
+	  depends on the source filename. For example a standard
+	  conversion from jpg to tif would keep the filename and just
+	  change the extension. Or all converted files should
+	  additionally go to a separate directory.
+	</p>
+	<p>
+	  This is where the class
+	  <code>org.im4java.utils.FilenamePatternResolver</code> is
+	  useful. The following snippet will convert all
+	  argument-files to tif.
+	</p>
+	<source>
+// define operation and command
+IMOperation op = new IMOperation();
+op.addImage();                         // input-file
+op.addImage();                         // output-file
+ConvertCmd cmd = new ConvertCmd();
+
+// load files
+ExtensionFilter filter = new ExtensionFilter("jpg");
+FilenameLoader  loader = new FilenameLoader(filter);
+List&lt;String&gt; files = loader.loadFilenames(mydir);
+
+// create the resolver
+FilenamePatternResolver resolver = 
+    new FilenamePatternResolver("%P/%f.tif");
+
+// now iterate over all files
+for (String img:files) {
+  cmd.run(op,img,resolver.createName(img));
+}
+	</source>
+	<p>
+	  The FilenamePatternResolver recognizes the following
+	  escape-sequences within it's pattern:
+	</p>
+	<ul>
+	  <li>%P: full pathname of source-image (i.e. the directory)</li>
+	  <li>%p: last component of %P</li>
+	  <li>%F: full filename without directory part</li>
+	  <li>%f: filename without directory part and extension</li>
+	  <li>%e: only the extension</li>
+	  <li>%D: drive-letter (on windows systems). Not
+	    available for source-files with an UNC-name.</li>
+	</ul>
+      </section>
+
+      <section id="BatchConverter">
+	<title>BatchConverter</title>
+
+	<p>
+	  The class <code>org.im4java.utils.BatchConverter</code> is a
+	  utility-class for client-applications. It will convert a
+	  given list of files in parallel making use of all available processors
+	  to speed up execution. It is not well suited for
+	  web-applications, since you don't want a single request to use
+	  up all of your ressources.
+	</p>
+
+	<p>
+	  Usage of this utility-class is straightforward. First you load
+	  your files into a <code>List</code>. This could be from a
+	  GUI-application where a user selects multiple files. Or the
+	  list could contain all files from a given directory (see the
+	  section <a href="#FilenameLoader">FilenameLoader</a> above).
+	</p>
+
+	<source>
+ ExtensionFilter filter = new ExtensionFilter("jpg");
+ filter.setRecursion(false);
+ FilenameLoader loader =  new FilenameLoader(filter);
+ List&lt;String&gt; images=loader.loadFilenames(dir);
+	</source>
+
+	<p>
+	  After you have the list, you create your
+	  <code>BatchConverter</code> and use it's
+	  <code>run()</code>-method to process the images:
+	</p>
+
+	<source>
+// create a simple thumbnail operation
+op = new IMOperation();
+op.size(80);
+op.addImage();     // placeholder input filename
+op.thumbnail(80);
+op.addImage();     // placeholder output filename
+
+// create a template for the output-files:
+// we put them in targetDir with the same filename as the original
+// images
+String template=targetDir+"%F";
+
+// create instance of BatchConverter and convert images
+BatchConverter bc = new BatchConverter(BatchConverter.Mode.PARALLEL);
+bc.run(op,images,targetDir+"%F");
+	</source>
+
+	<p>
+	  Since <code>BatchConverter</code> extends
+	  <code>ProcessExecutor</code>, you can use the methods
+	  described in the section about <a
+	    href="#processTermination">process termination</a> to wait
+	  for the termination of the command (note that the
+	  <code>shutdown()</code>-method is called automatically).
+	</p>
+	
+	<p>
+	  The class <code>BatchConverter</code> knows three modes of
+	  operation: <code>BatchConverter.SEQUENTIAL</code>,
+	  <code>BatchConverter.PARALLEL</code> and
+	  <code>BatchConverter.BATCH</code>. The first mode is more or
+	  less for benchmarking the other two, it converts the images
+	  one after another sequentially. The second mode uses
+	  parallel processing, it runs in it's default setting on all
+	  available processors. The last mode uses convert's ability
+	  to process more than one image at the same time:
+	</p>
+	<source>
+convert image1.jpg image2.jpg target_%d.tif
+mv target_1.tif image1.tif
+mv target_2.tif image2.tif
+	</source>
+	
+	<p>
+	  On modern computers with more than one processor
+	  <code>BatchConverter.PARALLEL</code> should be the
+	  fastest. If only one (real) processor is available,
+	  <code>BatchConverter.BATCH</code> should make the game.
+	</p>
+
+	<p>
+	  For a complete example see <code>TestCase22</code>. This
+	  test-case subclasses <code>BatchConverter</code> and uses the
+	  <code>terminated()</code>-method to receive a callback after
+	  termination. After termination, the callback-methods uses
+	  the <code>getFailedConversions()</code>-method of
+	  <code>BatchConverter</code> to query a list of
+	  <code>BatchConverter.ConvertException</code>-objects. These
+	  objects wrap the cause and the index of the image
+	  responsible of the failure. 
+	</p>
+      </section>
+    </section>
+
+    <section id="debug">
+      <title>Debugging</title>
+      <p>
+	Since version 1.0 im4java has a new method
+	<code>ImageCommand.createScript()</code> to aid in debugging:
+      </p>
+      <source>
+IMOperation op = new IMOperation();
+...
+ConvertCmd cmd = new ConvertCmd();
+cmd.createScript("myscript.sh",op);
+      </source>
+      <p>
+	This will dump your command and operation to a
+	script-file. You should change the execution-permission of the
+	file and try the script to make sure that you in fact generate
+	the commandline you intend to use.
+      </p>
+      <p>Note that on windows-platforms,
+	<code>createScript()</code>-method will automatically add the
+	extension <code>.cmd</code> to the filename passed to the
+	method.
+      </p>
+    </section>
+  </body>
+</document>

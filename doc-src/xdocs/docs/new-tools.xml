@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.1 $
+ $Author: bablokb $
+-->
+
+<document id="new-tools">
+  <header>
+    <title>Adding support for additional commandline-tools</title>
+  </header>
+
+  <body>
+    <section id="intro">
+      <title>Introduction</title>
+      <p>
+	This document is a step-by-step introduction on howto add
+	support for a new commandline-tool to im4java.
+      </p>
+    </section>
+  </body>
+</document>

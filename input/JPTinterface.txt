@@ -1,0 +1,35 @@
+# Interface defintion for jpegtran
+#
+# Syntax: option varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.4 $
+#
+!validInterface=true
+!toolName=jpegtran
+#
+-copy String:pCopyType
+-optimize
+-progressive
+-crop Integer:pWidth
+-crop Integer:pWidth x Integer:pHeight
+-crop Integer:pWidth x Integer:pHeight + Integer:pXoffset
+-crop Integer:pWidth x Integer:pHeight + Integer:pXoffset + Integer:pYoffset
+-grayscale
+-flip String:type
+-perfect
+-rotate Double:pDegrees
+-transpose
+-transverse
+-trim
+-restart Integer:pNumber
+-maxmemory Integer:pSize
+-outfile String:pFilename
+-verbose
+-debug
+-arithmetic
+-scans String:pFilename

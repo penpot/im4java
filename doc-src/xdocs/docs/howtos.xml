@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.1 $
+ $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>im4java HowTos</title>
+  </header>
+
+  <body>
+    <section id="Overview">
+      <title>Overview</title>
+      <p>If you want to share your ideas and experiences, please write
+      a HOWTO. You should use the template available in the
+	source-distribution
+	(<em>doc-src/xdocs/docs/howto-template.xml</em>).
+      </p>
+    </section>
+
+    <section id="howtos">
+      <title>Available HowTos</title>
+      <p>This is the list of currently available HowTos.</p>
+
+      <table>
+	<caption>Available HowTos</caption>
+	<tr>
+	  <th>HowTo</th>
+	  <th>Description</th>
+	</tr>
+	<tr>
+	  <td><a href="site:newtools">Howto add support for a new tool</a></td>
+	  <td>A step-by-step guide on howto add support for a new
+	    commandline-tool to im4java. This howto is not yet written
+	  but due for the next release of im4java.</td>
+	</tr>
+      </table> 
+    </section>
+  </body>
+</document>

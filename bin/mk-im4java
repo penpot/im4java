@@ -1,0 +1,395 @@
+#!/bin/bash
+#
+# This script creates the core im4java methods from an
+# interface-definition-file
+#
+# $Author: bablokb $
+# $Revision: 1.34 $
+#
+# License: GPL2
+# -----------------------------------------------------------------------------
+
+# usage message   -------------------------------------------------------------
+
+usage() {
+  echo -e "\n`basename $0`: create core im4java methods\n\
+  \nusage: `basename $0` [options] [interface-definition-file [...]]\n\
+  possible options:\n\
+    -o dir      create results in dir (default: $outputDir)\n\
+    -p package  create im4java class in package (default: $package)\n\
+    -h          show this help\n\
+    -q          run quiet\n\
+    -v          verbose messages (default)\n\
+"
+  exit 3
+}
+
+# set defaults   --------------------------------------------------------------
+
+setDefaults() {
+ binDir=`dirname "$0"`
+ outputDir="$binDir/../src"
+ inputDir="$binDir/../input"
+ package="org.im4java.core"
+ eval idfs=(`find "$binDir/../input/" -type f \
+                                       -name "*interface.txt" -printf '"%p" '`)
+ CLASS_HEAD="$inputDir/java.class.head"
+ TEMPLATE_OPERATION="$inputDir/operation.java.template"
+ TEMPLATE_CMD="$inputDir/cmd.java.template"
+ DEBUG=0
+ quiet=0
+}
+
+# parse arguments and set variables -------------------------------------------
+
+parseArguments() {
+  while getopts ":o:p:hqvd" opt; do
+    case $opt in
+      o) outputDir="$OPTARG";;
+      p) package="$OPTARG";;
+      h) usage;;
+      q) quiet=1;;
+      v) quiet=0;;
+      d) let DEBUG+=1;;
+      ?) echo "error: illegal option: $OPTARG" >&2
+           usage;;
+    esac
+  done
+  shift $((OPTIND-1))
+  [ "$#" -gt 0 ] && idfs=("$@")
+}
+
+# check arguments   -----------------------------------------------------------
+
+checkArguments() {
+  if [ ! -d "$outputDir" ]; then
+    echo "error: output-directory $outputDir does not exist!" >&2
+    usage
+  fi
+
+  targetDir="$outputDir/${package//.//}"
+  mkdir -p "$targetDir"
+}
+
+# process interface definition files   ----------------------------------------
+
+processInterfaceFiles() {
+  for f in "${idfs[@]}"; do
+    echo -e "processing $f" >&2
+
+    # set target-filename from interface-definition
+    defCode="${f##*/}"
+    defCode="${defCode%interface.txt}"
+
+    # reset config-variables
+    code=""
+    validInterface=""
+    toolName=""
+
+    getIdfSettings "$f"
+    : ${code:=$defCode}                     # set code from defCode if not
+    targetFile="$targetDir/${code}Ops.java" # set by idf
+
+    # generate java-sourcefile for xxxOps
+    echo -e "writing $targetFile" >&2
+    allMethods=""
+    writeClassHeader    > "$targetFile"     # write class-header
+    writeMethods "$f"  >> "$targetFile"     # parse file and generate methods
+    writeClassTail     >> "$targetFile"     # and write class-tail
+
+    # generate java-sourcefile for xxxOperation
+    targetFile="$targetDir/${code}Operation.java"
+    echo -e "writing $targetFile" >&2
+    if [ -f "$targetFile" ]; then
+      echo -e "$targetFile already exists" >&2
+    else
+      writeOperationClass > "$targetFile"
+    fi
+
+    # generate java-sourcefile for xxxCmd
+    # upper-case first character of toolName, because we use it as part of
+    # the class name
+    local toolNameU=`sed -e 's/.*/\u&/' <<< $toolName`
+    targetFile="$targetDir/${toolNameU}Cmd.java"
+    echo -e "writing $targetFile" >&2
+    if [ "`find $targetDir -iname ${toolName}Cmd.java \
+                  -exec echo 1 \; -quit`" = "1" ]; then
+      echo -e "$targetFile already exists" >&2
+    else
+      writeCmdClass  > "$targetFile"
+    fi
+  done
+}
+
+
+# parse a single line of the idf   --------------------------------------------
+
+parseLine() {
+  optionName="$1"
+
+  # use explicit method-name if available
+  methodName="${optionName#*|}"
+  if [ "$methodName" = "$optionName" ]; then
+    # convert option-name to method-name:
+    #   -append           -> append
+    #   +append           -> p_append
+    #   -adaptive-sharpen -> adaptiveSharpen
+    methodName=`sed -e 's/^-*//' -e 's/=$//' -e 's/^+/p_/' \
+                                 -e 's/-\(.\)/\U\1\E/g' <<< $optionName`
+  else
+    # strip explicit methodName from optionName
+    optionName="${optionName%|*}"
+  fi
+
+  # check for option type
+  if [ "${optionName: -1:1}" = "=" ]; then
+    optionType="long"
+  else
+    optionType="short"
+  fi  
+
+  # extract (optional) arguments
+  shift
+  declare -i i=0
+  attachVarToOption=0 preOper=""
+  while test $# -gt 0; do
+    token="$1"
+    if [ $i -eq 0 ]; then
+      if [ "$token" = "@" ]; then
+        attachVarToOption=1
+        shift
+        token="$1"
+      else
+        attachVarToOption=0
+        if [ "${#token}" -eq 1 ]; then
+          preOper="$token"
+          shift
+          token="$1"
+        fi
+      fi
+    fi
+    varType[$i]="${token%:*}"
+    varName[$i]="${token#*:}"
+    shift
+    if [ $# -gt 0 ]; then
+      oper[$i]="$1"
+      shift
+    fi
+    let i+=1
+  done
+  argc="$i"
+}
+
+# dump interface-defintion   --------------------------------------------------
+
+dumpDefs() {
+  declare -i i
+
+  echo "optionName=$optionName"
+  echo "methodName=$methodName"
+  echo "argc=$argc"
+
+  for (( i=0; i<$argc; ++i )); do
+    echo "varType[$i]=${varType[$i]}"   
+    echo "varName[$i]=${varName[$i]}"   
+    echo "oper[$i]=${oper[$i]}"   
+  done
+}
+
+# write class-header   --------------------------------------------------------
+
+writeClassHeader() {
+  sed -e "s/_PACKAGE_/$package/" -e "s/_CODE_/$code/g" \
+                    -e "s/_TOOLNAME_/$toolName/g" "$CLASS_HEAD"
+}
+
+# write template-class for operation ------------------------------------------
+
+writeOperationClass() {
+  sed -e "s/_PACKAGE_/$package/" -e "s/_CODE_/$code/g" \
+            -e "s/_TOOLNAME_/$toolName/g" "$TEMPLATE_OPERATION"
+}
+
+# write template-class for cmd ------------------------------------------------
+
+writeCmdClass() {
+  sed -e "s/_PACKAGE_/$package/" -e "s/_CODE_/$code/g" \
+            -e "s/_TOOLNAME_/$toolName/g" -e "s/_TOOLNAMEU_/$toolNameU/g" \
+                                                "$TEMPLATE_CMD"
+}
+
+# write method-header   -------------------------------------------------------
+
+writeMethodHeader() {
+  local maxArgs="$1"
+
+  # method comment and start
+  cat <<EOF
+  //////////////////////////////////////////////////////////////////////////////
+
+  /**
+     Add option $optionName to the $toolName commandline
+     (see the documentation of $toolName for details).
+  */
+
+EOF
+
+  # add method-signature
+  declare -i i
+  echo -en "  public ${code}Ops $methodName("
+  for (( i=0; i<$maxArgs-1; ++i )); do
+    echo -en "${varType[$i]} ${varName[$i]}, "
+  done
+  [ $i -lt $maxArgs ] && \
+                     echo -en "${varType[$i]} ${varName[$i]}"
+  echo -e ") {\n"
+
+  # add start of code
+  if [ $maxArgs -gt 0 ]; then
+    cat  <<EOF
+    String       oper;                      // only used in some methods
+    StringBuffer buf = new StringBuffer();  // local buffer for option-args
+EOF
+  fi
+
+  if [ "$optionType" = "short" -a $attachVarToOption -eq 0 ]; then
+    echo -e "    iCmdArgs.add(\"$optionName\");\n"
+  else
+    echo -e "    buf.append(\"$optionName\");\n"
+  fi
+}
+
+# write method-body  ----------------------------------------------------------
+
+writeMethodBody() {
+  local maxArgs="$1"
+  declare -i i
+  if [ $maxArgs -eq 0 ]; then
+    return
+  fi
+  [ -n "$preOper" ] &&  writeOperator "$preOper" "${varName[0]}"
+  for (( i=0; i<$maxArgs-1; ++i )); do
+    writeVariable
+    writeOperator "${oper[$i]}" "${varName[$i+1]}"  "${varName[$i]}" 
+  done
+  # write last variable
+  writeVariable
+}
+
+# write method-tail   ---------------------------------------------------------
+
+writeMethodTail() {
+  local maxArgs="$1"
+  if [ $maxArgs -gt 0 ]; then
+    echo -e "    if (buf.length()>0) {"
+    echo -e "      iCmdArgs.add(buf.toString());"
+    echo -e "    }"
+  fi
+  echo -e "    return this;\n  }\n"
+}
+
+# write processing of given variable   ----------------------------------------
+
+writeVariable() {
+    echo -e "    if (${varName[$i]} != null) {"
+    if [ "${varType[$i]}" = "Boolean" ]; then
+      echo -e "      if (${varName[$i]}.booleanValue())"
+      echo -e "        buf.append(\"%\");"
+    else
+      echo -e "      buf.append(${varName[$i]}.toString());"
+    fi
+    echo -e "    }"
+}
+
+# write processing of given operator   ----------------------------------------
+
+writeOperator() {
+  local op="$1" nameNext="$2" namePrev="$3"
+    if [ -n "$namePrev" ]; then
+      echo -e "    if ($namePrev != null || $nameNext != null) {"
+    fi
+    if [ "$op" = "_" ]; then
+      echo -e "      iCmdArgs.add(buf.toString());" 
+      echo -e "      buf.setLength(0);" 
+    elif [ "$op" = "+" ]; then
+      echo -e "      oper=\"+\";" 
+      echo -e "      if ($nameNext.doubleValue() < 0)" 
+      echo -e "        oper=\"\";" 
+      echo -e "      buf.append(oper);" 
+    elif [ "$op" != "@" ]; then
+      echo -e "      buf.append(\"$op\");" 
+    fi
+    if [ -n "$namePrev" ]; then
+      echo -e "    }"
+    fi
+}
+
+# write methods for a single-definition   -------------------------------------
+
+writeMethod() {
+  [ $quiet -eq 0 ] && echo "processing $optionName" >&2
+
+  # we create all variants with 0 to argc arguments
+  declare -i i
+  local iStart
+  if [ "$validInterface" = "true" ]; then
+    iStart=$argc                                   # argc is from parseLine
+  else
+    iStart=0         
+  fi
+  for (( i=$iStart; i<=$argc; ++i )); do
+    if [ $i -eq $iStart ]; then
+      methodSignature="$methodName"
+    else
+      methodSignature="${methodSignature}_${varType[$i-1]}"
+     fi
+    [ $DEBUG -gt 1 ] && echo $methodSignature 2>&1
+    if grep -qw "$methodSignature" <<< "$allMethods"; then
+      [ $quiet -eq 0 ] && echo "skipping      $methodSignature" >&2
+      continue
+    fi
+    [ $quiet -eq 0 ] && echo "processing    $methodSignature" >&2
+    writeMethodHeader $i
+    writeMethodBody $i
+    writeMethodTail $i
+    allMethods="$allMethods ${methodSignature}"
+  done
+}
+
+# parse interface-definition-file and write methods   -------------------------
+
+writeMethods() {
+  local line
+  declare -a varType varName oper
+
+  while read line; do
+    [ "${line:0:1}" = "#" ] && continue            # strip comment lines
+    [ "${line:0:1}" = '!' ] && continue            # strip settings
+    parseLine $line                                # parse given line
+    [ $DEBUG -gt 0 ] && dumpDefs                   # dump parse-results
+    writeMethod                                    # write method-definition
+  done < "$1"
+
+}
+
+# write class-tail   ----------------------------------------------------------
+
+writeClassTail() {
+  echo -e "\n}" 
+}
+
+# extract and apply idf-settings   --------------------------------------------
+
+getIdfSettings() {
+  eval `sed -ne '/^!/s/!//p' "$1"`
+}
+
+# main program   --------------------------------------------------------------
+
+setDefaults
+parseArguments "$@"
+checkArguments
+
+processInterfaceFiles
+
+exit 0

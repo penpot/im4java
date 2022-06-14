@@ -1,0 +1,184 @@
+# Interface defintion for GraphicsMagick (Version 1.2.5)
+#
+# Syntax: GM-option varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.4 $
+#
+!toolName=GraphicsMagick
+#
+-adjoin
++adjoin
+-affine Double:sx , Double:rx , Double:ry , Double:sy , Double:tx , Double:ty
+-antialias
++antialias
+-append
++append
+-authenticate String:password
+-average
+-backdrop
+-background String:color
+-black-threshold Double:threshold @ Boolean:percent
+-blue-primary Double:x , Double:y
+-blur Double:radius x Double:sigma
+-bordercolor String:color
+-borderwidth Integer:width x Integer:height + Integer:x + Integer:y @ Boolean:percent
++borderwidth
+-border Integer:width x Integer:height
+-box String:pColor
+-channel String:type
+-charcoal Integer:factor
+-chop Integer:width x Integer:height + Integer:x + Integer:y @ Boolean:percent
+-clip
+-clippath
+-coalesce
+-colorize Integer:red / Integer:blue / Integer:green
+-colors Integer:value
+-colorspace String:value
+-comment String:text
++compress
+-compress String:type
+-contrast
++contrast
+-convolve Integer:k1 , Integer:k2 , Integer:k3 , Integer:k4 , Integer:k5 , Integer:k6 , Integer:k7 , Integer:k8 , Integer:k9 , Integer:k10 , Integer:k11 , Integer:k12 , Integer:k13 , Integer:k14 , Integer:k15 , Integer:k16
+-crop Integer:width x Integer:height + Integer:x + Integer:y @ Character:special
+-cycle Integer:amount
++debug
+-debug String:events
+-deconstruct
+-define String:keyValue
++define String:keyValue
+-delay Integer:ticks x Integer:ticksPerSecond @ Character:special
+-density Integer:width x Integer:height
+-depth Integer:value
+-despeckle
+-display String:host : Integer:display . Integer:screen
+-dispose String:method
++dither
+-dither String:method
+-draw String:string
+-edge Double:radius
+-emboss Double:radius
+-encoding String:type
++endian
+-endian String:type
+-enhance
+-equalize
+-fill String:color
+-filter String:type
+-flatten
+-flip
+-flop
+-font String:name
+-frame Integer:width x Integer:height + Integer:outerBevelWidth + Integer:innerBevelWidth
++frame
+-fuzz Double:distance @ Boolean:percent
+-gamma Double:value
++gamma Double:value
+-gaussian  Double:radius x Double:sigma
+-geometry Integer:width x Integer:height + Integer:x + Integer:y
+-gravity String:type
+-green-primary Double:x , Double:y
+-help
+-implode Double:factor
+-intent String:type
+-interlace String:type
++label
+-label String:name
+-lat Integer:width x Integer:height + Integer:offset @ Boolean:percent
+-level Double:black_point , Double:white_point @ Boolean:percent , Double:gamma
+-limit String:type String:value
+-list String:type
+-log String:text
+-loop Integer:iterations
++map
+-map String:filename
++mask
+-mask String:filename
+-matte
++matte
+-median Double:radius
+-modulate Double:brightness , Double:saturation , Double:hue
+-monitor
+-monochrome
+-morph Integer:frames
+-mosaic
+-motion-blur Double:radius x Double:sigma + Double:angle
+-negate
++negate
+-noise Double:radius
++noise String:type
+-noop
+-normalize
+-opaque String:color
+-operator String:channel _ String:operator _ Double:rvalue @ Boolean:percent
+-ordered-dither String:channelType _ Integer:N
+-output-directory String:pDirectory
++page
+-page Integer:width x Integer:height + Integer:x + Integer:y @ Character:special
+-paint Double:radius
+-pause Integer:pSeconds
+-pen String:pColor
+-ping
++ping
+-pointsize Integer:value
+-preview String:type
+-process String:pCommand
+-profile String:filename
++profile String:profileName
++progress
+-quality Double:value
+-raise Integer:width x Integer:height
++raise Integer:width x Integer:height
+-random-threshold String:channelType _ Double:low x Double:high
+-red-primary Double:x , Double:y
+-region Integer:width x Integer:height + Integer:x + Integer:y
++remap
+-render
++render
+-resample Integer:horizontal x Integer:vertical
+-resize Integer:width x Integer:height @ Character:special
+-roll Integer:x + Integer:y
+-rotate Double:degrees @ Character:special
+-sample Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+-sampling-factor Double:horizontalFactor x Double:verticalFactor
+-scale Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+-scene Integer:value
+-seed
+-segment Integer:clusterThreshold x Double:smoothingThreshold
+-set String:attribute _ String:value
+-shade Double:azimuth x Double:elevation
++shade Double:azimuth x Double:elevation
+-sharpen Double:radius x Double:sigma
+-shave Integer:width x Integer:height @ Boolean:percent
+-shear Double:xDegrees x Double:yDegrees
+-size Integer:width x Integer:height + Integer:offset
+-solarize Double:threshold
+-spread Integer:amount
+-stroke String:color
+-strokewidth Integer:value
+-swirl Double:degrees
+-texture String:filename
+-threshold Integer:value @ Boolean:percent
+-tile String:filename
+-transform
+-transparent String:color
+-treedepth Integer:value
+-trim
+-type String:type
+-undercolor String:color
+-units String:type
+-unsharp Double:radius x Double:sigma + Double:amount + Double:threshold
+-verbose
+-version
+-view String:text
+-virtual-pixel String:method
+-wave Double:amplitude x Double:wavelength
+-white-point Double:x , Double:y
+-white-threshold Double:threshold @ Boolean:percent
+-write String:filename
++write String:filename

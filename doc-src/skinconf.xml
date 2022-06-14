@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!--
+ 
+ Copyright (c) 2008-2010 by Bernhard Bablok (bablokb at users.sourceforge.net)
+
+ $Revision: 1.2 $
+ $Author: bablokb $
+
+-->
+
+<!DOCTYPE skinconfig PUBLIC 
+    "-//APACHE//DTD Skin Configuration V0.7-1//EN" 
+    "http://forrest.apache.org/dtd/skinconfig-v07-1.dtd">
+
+<skinconfig>
+
+  <disable-print-link>true</disable-print-link>  
+  <disable-pdf-link>false</disable-pdf-link>
+  <disable-pod-link>true</disable-pod-link>
+  <disable-txt-link>true</disable-txt-link>
+  <disable-xml-link>true</disable-xml-link>
+
+  <disable-external-link-image>true</disable-external-link-image>
+
+  <disable-compliance-links>false</disable-compliance-links>
+
+  <obfuscate-mail-links>true</obfuscate-mail-links>
+  <obfuscate-mail-value> . a t . </obfuscate-mail-value>
+
+  <project-name>im4java</project-name>
+  <project-description>A pure Java wrapper for ImageMagick and other
+    commandline-tools</project-description>
+  <project-url>http://im4java.sourceforge.net</project-url>
+  <project-logo>images/project-logo.gif</project-logo>
+
+  <host-url>http://sourceforge.net/projects/im4java</host-url>
+  <host-logo>http://sflogo.sourceforge.net/sflogo.php?group_id=251357&amp;type=14</host-logo>
+
+  <favicon-url></favicon-url>
+
+  <year>2008-2010</year>
+  <vendor>Bernhard Bablok</vendor>
+
+  <trail>
+    <link1 name="im4java" href="http://im4java.sourceforge.net"/>
+    <link2 name="" href=""/>
+    <link3 name="" href=""/>
+  </trail>
+
+  <toc max-depth="2" min-sections="2" location="menu"/>
+  <headings type="boxed"/>
+  <feedback to="bablokb . at . users.sf.net"
+    href="mailto:bablokb . at . users.sf.net?subject=Feedback&#160;" >
+    Send feedback about the website to:
+  </feedback>
+
+  <extra-css>
+    p.quote {
+      margin-left: 2em;
+      padding: .5em;
+      background-color: #f0f0f0;
+      font-family: monospace;
+    }
+    #footer a { color: #0F3660; }
+    #footer a:visited { color: #009999; }
+  </extra-css>
+
+  <colors>
+  </colors>
+
+  <pdf>
+    <page size="a4" orientation="portrait" text-align="left"/>
+    <page-numbering-format>Page 1</page-numbering-format>
+
+    <margins double-sided="false">
+      <top>1in</top>
+      <bottom>1in</bottom>
+      <inner>1.25in</inner>
+      <outer>1in</outer>
+    </margins>
+
+    <show-external-urls>false</show-external-urls>
+    <disable-copyright-footer>false</disable-copyright-footer>
+  </pdf>
+
+  <credits>
+    <credit box-location="alt">
+      <name>Built with Apache Forrest</name>
+      <url>http://forrest.apache.org/</url>
+      <image>images/built-with-forrest-button.png</image>
+      <width>88</width>
+      <height>31</height>
+    </credit>
+  </credits>
+</skinconfig>

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Created-By: Bernhard Bablok
+Main-Class: org.im4java.test.Test
+
+

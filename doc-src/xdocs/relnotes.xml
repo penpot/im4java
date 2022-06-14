@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<document id="relnotes">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.13 $
+  $Author: bablokb $
+-->
+
+  <header>
+    <title>Release Notes</title>
+  </header>
+
+  <body>
+    <note>
+      For a detailed list of changes, have a look at the ChangeLog.
+    </note>
+
+    <section id="R_1_4_0">
+      <title>Release 1.4.0</title>
+      <ul>
+	<li>
+	  Added class <code>ArrayListErrorConsumer</code>. This class
+	  is useful to catch the metric-output of the
+	  <code>compare</code>-command.
+	</li>
+	<li>
+	  The <code>Info</code>-class now also accepts images from an
+	  <code>InputStream</code>. Thanks to Mihaly Koles for
+	  suggesting this change and for providing an initial
+	  implementation.
+	</li>
+	<li>Updated interfaces for ufraw, jpegtran and
+	  ImageMagick. Since the last release, there were 27 (!) new
+	  ImageMagick-options.
+	</li>
+	<li>Optimized code-generation (removed unnessary code from
+	  methods without arguments).
+	</li>
+      </ul>
+    </section>
+
+    <section id="R_1_3_2">
+      <title>Release 1.3.2</title>
+      <ul>
+	<li>
+	  The interface-definition for dcraw had various bugs. This
+	  version fixes the bugs and added two new methods
+	  (<code>setGamma</code> and <code>depth16withGamma</code>).
+	</li>
+      </ul>
+    </section>
+
+    <section id="R_1_3_1">
+      <title>Release 1.3.1</title>
+      <ul>
+	<li>Bugfix for a NullPointerException in the
+	  <code>Info</code>-class. The parser could not deal with
+	  empty lines within image-properties.</li>
+      </ul>
+    </section>
+
+    <section id="R_1_3_0">
+      <title>Release 1.3.0</title>
+      <ul>
+	<li>Added support for ImageMagick's compare-command</li>
+	<li>Update of ImageMagick's commandline options</li>
+	<li>Rework of the <code>Info</code> class: the implementation
+	  prior to 1.3.0 had a number of flaws and shortcomings. If
+	  the image contained more than one scene, the constructor
+	  requesting basic attributes would fill the attributes from
+	  the <em>first</em> scene, whereas the constructor requesting
+	  full attributes would fill the attributes from the
+	  <em>last</em> scene. In addition,
+	  <code>Info.getImageWidth()</code> and
+	  <code>Info.getImageHeight()</code>  didn't return the image
+	  width and height, but the page width and height (although
+	  for most images this is identical). With the new implementation,
+	  these bugs were fixed and all attributes of all scenes are
+	  available. Please read the API-documentation for details.
+	</li>
+	<li>Support more image-formats for BufferedImages. If you
+	  installed the JAI-extensions you gain support for
+	  CMYK-images through the JAI-tiff-plugin.</li>
+      </ul>
+    </section>
+
+    <section id="R_1_2_1">
+      <title>Release 1.2.1</title>
+      <ul>
+	<li>Documentation-update: im4java is available at maven-central</li>
+      </ul>
+    </section>
+
+    <section id="R_1_2_0">
+      <title>Release 1.2.0</title>
+      <ul>
+	<li>Code generation is much faster</li>
+	<li>Improved <code>Info</code> class: simple interface to
+	  retrieve basic image-properties</li>
+	<li>fixed a number of bugs</li>
+      </ul>
+    </section>
+
+    <section id="R_1_1_0">
+      <title>Release 1.1.0</title>
+      <ul>
+	<li>Support ImageMagick's read-modifier for image-placeholders</li>
+	<li>Support <a
+	    href="./docs/dev-guide.html#parallelProcessing">parallel
+	    processing</a> of images. This feature will
+	  efficiently use your multi-processor computer (note that
+	  this is mainly useful for desktop-applications). Note that
+	  the im4java-API for parallel processing is not yet
+	  considered as stable. This depends on feedback and
+	  bug-reports. I am not overly optimistic that I found and
+	  fixed all bugs and race-conditions.
+	</li>
+	<li>The interface <code>org.im4java.process.ProcessListener</code> is
+	  deprecated and is replaced with
+	  <code>org.im4java.process.ProcessEventListener</code>.
+	  Transition should be easy, since the interfaces are very
+	  similar. This change was necessary to support parallel
+	  processing. The old interface will be removed with the first
+	  release after beginning of 2011.
+	</li>
+	<li>Fixed a serious bug in the implementation which could lead
+	  to deadlocks under Windows (thanks to Jaroslav Snajdr for
+	  pointing this out and providing a patch).
+	</li>
+	<li>The binary-distribution now contains two versions of the
+	  im4java-jar: one for JRE 1.6, one for 1.5.
+	</li>
+	<li>The source-distribution will again contain all generated
+	  java-source-files.
+	</li>
+      </ul>
+    </section>
+
+    <section id="R_1_0_0">
+      <title>Release 1.0.0</title>
+      <ul>
+	<li>Relaunch of the project-web, adding a lot of documentation</li>
+	<li>Refactored Test.java</li>
+	<li>All tests now work under Windows</li>
+	<li>Added script-generator</li>
+	<li>Support the environment-variable IM4JAVA_TOOLPATH to set the
+	  searchpath for tools externally
+	</li>
+	<li>Removed generated files (including doc) from the source distribution</li>
+	<li>Removed source from the binary distribution</li>
+      </ul>
+    </section>
+
+    <section id="R_0_99_0">
+      <title>Release 0.99.0</title>
+      <ul>
+	<li>Added support for defining search paths</li>
+	<li>Minor fixes to interface-definition-files</li>
+      </ul>
+    </section>
+
+    <section id="R_0_98_0">
+      <title>Release 0.98.0</title>
+      <ul>
+	<li>Added support for exiftool</li>
+	<li>Added support for dcraw</li>
+	<li>minor fixes to interface-definition-files</li>
+      </ul>
+    </section>
+
+    <section id="R_0_97_0">
+      <title>Release 0.97.0</title>
+      <ul>
+	<li>Added support for ufraw</li>
+	<li>Added support for asynchronous execution of commands</li>
+	<li>Source-generation now supports commands with long-style
+	  (--foo=bar) options
+	</li>
+      </ul>
+    </section>
+
+
+    <section id="R_0_96_0">
+      <title>Release 0.96.0</title>
+      <ul>
+	<li>Source-generation now supports more than one
+	  interface-definition-file
+	</li>
+	<li>Added support for GraphicsMagick. You can hard-code
+	  GM-usage, but if you stick to the common subset of IM and GM
+	  commands, you can switch to GM at runtime by setting the
+	  system-property im4java.useGM=true.
+	</li>
+	<li>Added support for jpegtran</li>
+	<li>Added some utility-classes in org.im4java.process</li>
+	<li>ImageCommand now sends stdout to System.out as default</li>
+	<li>
+	  Incompatible change to IdentifyCmd: output is not
+	  captured by default anymore. To capture output, use the new
+	  class org.im4java.process.ArrayListOutputConsumer. See
+	  org.im4java.test.Test.testIdentify() for an example.
+	</li>
+      </ul>
+    </section>
+
+    <section id="R_0_95_0">
+      <title>Release 0.95.0</title>
+      <ul>
+	<li>Initial release</li>
+      </ul>
+    </section>
+  </body>
+</document>

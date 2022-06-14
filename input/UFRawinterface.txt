@@ -1,0 +1,60 @@
+# Interface defintion for ufraw/ufraw-batch
+#
+# Syntax: option varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.4 $
+#
+!validInterface=true
+!toolName=ufraw
+#
+--conf= String:pFile
+--wb= String:pType
+--temperature= Integer:pTemp
+--green= Double:pFactor
+--base-curve= String:pType
+--base-curve-file= String:pBaseCurveFile
+--curve= String:pCurveType
+--curve-file= String:pCurveFile
+--restore= String:pType
+--clip= String:pType
+--gamma= Double:pGamma
+--linearity= Double:pLinearity
+--contrast= Double:pContrast
+--saturation= Double:pSaturation
+--wavelet-denoising-threshold= Double:pThreshold
+--hotpixel-sensitivity= Double:pValue
+--exposure= String:pAuto
+--exposure= Double:pExposure
+--black-point= String:pAuto
+--black-point= Double:pBlack
+--interpolation= String:pType
+--color-smoothing
+--grayscale= String:pType
+--shrink= Double:pFactor
+--size= Integer:pSize
+--out-type= String:pType
+--out-depth= Integer:pDepth
+--create-id= String:pType
+--compression= Integer:Value
+--exif
+--noexif
+--zip
+--nozip
+--embedded-image
+--rotate= String:pType
+--crop-left= Integer:pCount
+--crop-right= Integer:pCount
+--crop-top= Integer:pCount
+--crop-bottom= Integer:pCount
+--lensfun= String:pType
+--out-path= String:pPath
+--output= String:pFilename
+--darkframe= String:pFilename
+--overwrite
+--maximize-window
+--silent

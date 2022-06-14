@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.1 $
+  $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>im4java Documentation</title>
+  </header>
+
+  <body>
+    <section id="Overview">
+      <title>Overview</title>
+      <p>
+	After you downloaded and installed the software, you should
+	start by reading the <a
+	  href="site:devguide">Developer's Guide</a>. For the details, you
+	should browse the <a href="ext:im4javaapi">im4java API</a>.
+      </p>
+
+      <p>
+	If you want to add a new tool to the list of supported
+	commandline tools, you should read about <a
+	  href="site:newtools">Adding new Tools</a> 
+      </p>
+
+      <p>
+	Various aspects of the im4java-library are documented in the <a
+	  href="site:reference">reference</a>. 
+      </p>
+    </section>
+  </body>
+</document>

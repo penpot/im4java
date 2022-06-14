@@ -1,0 +1,95 @@
+# Interface defintion for exiftool
+#
+# Syntax: option|methodName [@] varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.2 $
+#
+!validInterface=true
+!toolName=exiftool
+#
+# the following options are not automatically generated as methods,
+# but are implemented manually in ETOperation:
+#
+#       -TAG=[VALUE]
+#       -TAG
+#       --TAG
+#       -TAG[+-]=[VALUE]
+#       -TAG<=DATFILE 
+#       -TAG<=FMT
+#
+# One reason is the plethora of tagnames (this would bloat the java-file
+# with hundreds of methods), another reason is the complexity of the
+# syntax (which is not near any standard with its +-=< chars).
+#
+       -@|readArguments String:pFilename
+       -duplicates|allowDuplicates
+       --duplicates|supressDuplicates
+       -binary
+       -coordFormat String:pFormat
+       -dateFormat String:pFormat
+       -decimal
+       --composite
+       -escapeHTML
+       -extractEmbedded
+       -extension String:pExtension
+       --extension|ignoreExtension String:pExtension
+       -forcePrint
+       -fixBase Integer:pOffset
+       -fast
+       -groupHeadings @ String:pHeadings
+       -groupNames @ String:pHeadings
+       -htmlFormat
+       -hex
+       -htmlDump @ String:pOffset
+       -ignore String:pDirectory
+       -if|ifCondition String:pExpression
+       -json
+       -pause
+       -long|longOutputFormat
+       -latin
+       -list
+       -list String:pType
+       -listw
+       -listw String:pType
+       -listf
+       -listf String:pType
+       -listwf
+       -listwf String:pType
+       -listg
+       -listg String:pType
+       -listg @ String:pGroupSpec _ String:pType
+       -listd String:pType
+       -ignoreMinorErrors
+       -n|noPrintConv
+       --printConv
+       -out String:pFile
+       -overwrite_original
+       -overwrite_original_in_place
+       -printFormat String:pFormat
+       -preserve
+       -quiet
+       -recurse
+       -short|shortOutputFormat
+       -veryShort|veryShortOutputFormat
+       -scanForXMP
+       -separator String:pSeparator
+       -tab
+       -table
+       -tagsFromFile String:pSrcFile
+       -unknown
+       -unknown2
+       -verbose
+       -verbose @ Integer:pLevel
+       -ver
+       -textOut String:pOutspec
+       -exclude String:pTagName
+       -xmlFormat
+       -zip
+       -common_args
+       -execute
+       -srcfile String:pFormat

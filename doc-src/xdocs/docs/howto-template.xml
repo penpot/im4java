@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE howto PUBLIC "-//APACHE//DTD How-to V2.0//EN"
+"http://forrest.apache.org/dtd/howto-v20.dtd">
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.1 $
+ $Author: bablokb $
+-->
+
+<howto>
+  <header>
+    <title>im4java HOWTO-Template</title>
+
+    <version>1</version>
+
+    <abstract>This is a generic HowTO template.
+    </abstract>
+    <last-modified-content-date date="2010-03-08" />
+  </header>
+
+  <audience title="Intended Audience">
+    <p></p>
+  </audience>
+
+  <purpose title="Purpose">
+    <p></p>
+  </purpose>
+
+  <prerequisites title="Prerequisites">
+    <p></p>
+  </prerequisites>
+
+  <steps title="Steps">
+    <p></p>
+
+    <section id="a">
+      <title></title>
+      <p></p>
+    </section>
+
+    <section id="b">
+      <title></title>
+      <p></p>
+    </section>
+  </steps>
+
+  <extension title="Extension">
+    <p></p>
+  </extension>
+
+  <references title="References">
+    <p></p>
+  </references>
+</howto>

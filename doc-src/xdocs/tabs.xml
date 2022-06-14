@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (c) 2008-2010 by Bernhard Bablok (bablokb at users.sourceforge.net)
+
+ $Revision: 1.1 $
+ $Author: bablokb $
+-->
+
+<!DOCTYPE tabs PUBLIC 
+    "-//APACHE//DTD Cocoon Documentation Tab V1.1//EN" 
+    "http://forrest.apache.org/dtd/tab-cocoon-v11.dtd">
+
+<tabs software="im4java"
+  title="A pure Java wrapper for ImageMagick and other
+    commandline-tools"
+  copyright="(c) Bernhard Bablok, 2008-2010"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <tab id=""         label="Overview"      dir="" />
+  <tab id="install"  label="Installation"  dir="install"/>
+  <tab id="docs"     label="Documentation" dir="docs"/>
+  <tab id="tools"    label="Tools"         dir="tools"/>
+  <tab id="api"      label="API"           href="http://im4java.sf.net/api/" />
+</tabs>

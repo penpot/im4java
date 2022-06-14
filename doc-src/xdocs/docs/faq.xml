@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE faqs PUBLIC "-//APACHE//DTD FAQ V2.0//EN"
+ "http://forrest.apache.org/dtd/faq-v20.dtd">
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.2 $
+ $Author: bablokb $
+-->
+
+<faqs>
+    <title>im4java Frequently Asked Questions</title>
+
+  <faqsection id="general">
+    <title>General Questions</title>
+    <faq id="jni">
+      <question>
+	What exactly do you mean with <em>JNI-hazard</em>?
+      </question>
+      <answer>
+        <p>
+	  Running native code using JNI from within java always
+	  imposes additional risks. The JVM is no longer sandboxed, so
+	  there 
+	  might be some security issues. In addition, there could be
+	  errors like memory leaks or memory corruption within the
+	  JNI-layer (JMagick) or within the native code (ImageMagick).
+	</p>
+	<p>
+	  This is especially dangerous for long running processes
+	  (typically web-application-servers). Memory corruption or a
+	  segmentation fault (maybe triggered by a intentionally
+	  manipulated image) might bring down the whole server.
+	</p>
+	<p>
+	  On the other side, in reality the situation is not as bad as
+	  it sounds above. JMagick is well tested, and for standard
+	  use-cases it prooves to be very stable.
+	</p>
+	<p>
+	  Some additional information is available on the
+	  JMagick-users mailing list where <a href="ext:jumljni">this
+	    topic</a> has been discussed to some detail.
+	</p>
+      </answer>
+    </faq>
+
+    <faq id="winconvert">
+      <question>
+        The library does not use ImageMagicks <code>convert</code>
+	command, but the one supplied by Microsoft. What can I do?
+      </question>
+      <answer>
+        <p>
+	  Read the Developer's Guide, section <a
+	    href="dev-guide.html#environment">Setting up the
+	    Environment</a>. 
+        </p>
+      </answer>
+    </faq>
+
+    <faq id="cmdoption">
+      <question>
+	The program xxx supports option <code>-foo</code>, but im4java
+	does not. Why? And what can I do about it?
+      </question>
+      <answer>
+        <p>
+	  Keeping up with actively devolped tools is not easy, im4java
+	  will always lag behind in the support of new commandline
+	  options. But adding support for a new option is
+	  straightforward: 
+	</p>
+	  <ol>
+	    <li>Download the source-distribution of im4java.</li>
+	    <li>Edit the file <code>input/XXXinterface.txt</code> and
+	      add your new option. The syntax of the file should be
+	      clear.
+	    </li>
+	    <li>Run <code>make src jar</code>. That's it!</li>
+	    <li>Post the diff of <code>input/XXXinterface.txt</code>
+	      on the jmagick-users mailing-list. I will add it to the
+	      next version of im4java.
+	    </li>
+	  </ol>
+      </answer>
+    </faq>
+
+    <faq id="exception">
+      <question>
+	Running my code just throws a
+	<code>CommandException</code>. What can I do?
+      </question>
+      <answer>
+        <p>
+	  In case there is a CommandException, you should always print
+	  the associated error-text:
+	</p>
+	<source>
+	  try {
+            ...
+          } catch (CommandException ce) {
+            ce.printStackTrace();
+            ArrayList&lt;String&gt; cmdError = ce.getErrorText();
+            for (String line:cmdError) {
+              System.err.println(line);
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+	</source>
+	<p>The error-text ist the stderr of the used
+	  command. Hopefully it tells you why it failed.
+	</p>
+      </answer>
+    </faq>
+    <!-- More faqs or parts here -->
+  </faqsection>
+
+  <faqsection id="implementation">
+    <title>Implementation related</title>
+    <faq id="meta">
+      <question>
+        To be asked.
+      </question>
+      <answer>
+        <p>To be answered.
+        </p>
+      </answer>
+    </faq>
+    <!-- More faqs or parts here -->
+  </faqsection>
+</faqs>

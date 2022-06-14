@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.13 $
+  $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>im4java</title>
+  </header>
+
+  <body>
+    <note>The current version of im4java is 1.4.0</note>
+
+    <section id="intro">
+      <title>Introduction</title>
+
+      <p>im4java is a pure-java interface to the ImageMagick
+      commandline. For details about the project, please visit the
+      <a href="ext:project">main project page</a>.
+      </p>
+    </section>
+
+    <section id="license">
+      <title>License</title>
+
+      <p>im4java is licensed under the LGPL (see file COPYING.LIB in
+	the downloaded packages). Since im4java is a wrapper libary, you
+	should also make sure that you comply to the individual
+	license-statements of all the tools you use indirectly through
+	im4java.
+      </p>
+    </section>
+
+    <section id="description">
+      <title>Description</title>
+
+      <p>im4java is (to my knowlegde) the second java interface to
+	ImageMagick. It is not meant as a replacement for <a
+	href="ext:jmagick">JMagick</a>, but as an
+	addition.
+      </p>
+
+      <p>JMagick is a thin JNI layer above the ImageMagick C-API. im4java in
+	contrast just generates the commandline for the ImageMagick commands and
+	passes the generated line to the selected IM-command (using the 
+	java.lang.ProcessBuilder.start()-method).
+      </p>
+
+      <p>Disadvantages of the approach: your are limited to the
+	capabilities of the IM commands. With JMagick, you have access to
+	the low-level interface of IM and therefore you have a very
+	detailed control of the processing of images. And you have
+	better performance.
+      </p>
+
+      <p>Advantages of im4java: the interface of the IM commandline is quite
+	stable, so your java program (and the im4java-library) will work
+	across many versions of IM. im4java also provides a better OO interface
+	(the "language" of the IM-commandline with it's postfix-operation
+	notation translates very easily into OO-notation). And most important:
+	you can use im4java everywhere JMagick can't be used because of the
+	<a href="site:faq">JNI hazard</a> (e.g. java application servers).
+      </p>
+    </section>
+
+    <section id="features">
+      <title>Features</title>
+
+      <ul>
+	<li>supports most ImageMagick commands</li>
+	<li>reuse a commandline multiple times for different set of
+	  images
+	</li> 
+	<li>IM options and operators translate into similar
+	  method-names, e.g.
+	  <source>
+	    -resize 1024           -&gt; .resize(1024) or .resize(1024,null)
+	    -resize 1024x768       -&gt; .resize(1024,768)
+	    -resize x768           -&gt; .resize(null,768)
+	    -sigmoidal-contrast 20 -&gt; .sigmoidalContrast(20.)
+	    -append                -&gt; .append()
+	    +append                -&gt; .p_append()
+	  </source>
+	</li>
+	<li>you can pipe input to and from ImageMagick commands</li>
+	<li>BufferedImage support, i.e you can use BufferedImages as input to
+	  IM commands and pipe output of IM commands into a
+	  BufferedImage
+	</li>
+	<li>asynchronous execution of commands possible</li>
+	<li>parallel processing of multiple input-images</li>
+	<li>the architecture supports arbitrary commandline-tools</li>
+	<li>supports GraphicsMagick</li>
+	<li>supports jpegtran</li>
+	<li>supports ufraw</li>
+	<li>supports exiftool</li>
+	<li>supports dcraw</li>
+      </ul>
+    </section>
+
+    <section id="download">
+    <title>Download</title>
+
+      <p>Source and binary packages are available for download. See the <a
+	  href="ext:download">download area</a> of the
+	im4java-project. The current version is <strong>1.4.0</strong>.
+      </p>
+
+      <p>You can find a comprehensive list of changes in the <a
+	  href="site:relnotes">release notes</a>  and all the details in the file <em>ChangeLog</em>.
+      </p>
+    </section>
+
+    <section id="maven">
+    <title>Maven-Repository</title>
+      <p>
+	Thanks to the effort of users, the im4java-library is also
+	available from
+	<a href="ext:maven">maven</a>. An alternative site is <a
+	  href="ext:mavenalt">here</a> 
+	(kudos to the people at cedarsoft). Note that maven
+	is not supported by the im4java-project due to lack of
+	expertise.
+      </p>
+
+      <p>
+	The necessary pom-entry for the alternative repository is:
+      </p>
+
+      <source>
+&lt;repositories&gt;
+  &lt;repository&gt;
+    &lt;id&gt;cedarsoft-thirdparty&lt;/id&gt;
+    &lt;url&gt;http://maven.cedarsoft.com/content/repositories/thirdparty/&lt;/url&gt;
+  &lt;/repository&gt;
+&lt;/repositories&gt;
+      </source>
+
+    </section>
+
+    <section id="maillist">
+      <title>Mailing Lists</title>
+
+      <p>
+	Currently (due to low traffic and due to the same topic), the
+	JMagick and the im4java projects share the same
+	mailing-lists. Please go to the project page of <a
+	  href="ext:jmagickpro">JMagick</a>
+	and register to the jmagick-users mailing list.
+      </p>
+    </section>
+
+    <section id="projects">
+      <title>Projects using im4java</title>
+
+      <ul>
+	<li>
+	  <a href="ext:natbraille">http://natbraille.free.fr</a>
+	</li>
+      </ul>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.3 $
+ $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>im4java Installation</title>
+  </header>
+
+  <body>
+    <section id="install">
+      <title>Installation</title>
+      <p>
+	There is no formal installation method. If you have downloaded
+	the source-distribution and are using Linux, you should run
+      </p>
+      <source>
+	$ &gt; make src jar
+      </source>
+      <p>
+	This will generate and compile all source-files and generate the im4java
+	library (the jar file <code>im4java-version.jar</code>). Note
+	that compiling the library requires bash and make and the java
+	development kit. If you use a different operating system, you
+	must either install a unix-environment (e.g. <em>cygwin</em>
+	for Windows), or you should download the binary distribution
+	of im4java.
+      </p>
+      <p>
+	After you created the im4java library (which is also part of
+	the binary distribution), you just add it to the CLASSPATH of
+	your project.
+      </p>
+      <p>
+	If you want to recreate the documentation from source, you
+	need <a href="ext:forrest">Apache Forrest</a>, version 0.8,
+	and run
+      </p>
+      <source>
+	$ &gt; make doc
+      </source>
+    </section>
+
+    <section id="java15">
+      <title>Support for JRE 1.5</title>
+      <p>
+	In case you need a version compatible with JRE 1.5, you can
+	create a 1.5-compatible version from source with
+      </p>
+      <source>
+	$ &gt; make src jar-1.5
+      </source>
+      <p>
+	The binary distribution already has a 1.5-compatible version
+	named  <code>im4java-version-1.5.jar</code>.
+      </p>
+    </section>
+
+    <section id="start">
+      <title>Getting Started</title>
+      <p>
+	Once you have the library in place, you should read the <a
+	  href="site:devguide">Developer's Guide</a> (at least the
+	first section about setting up the environment for
+	im4java). You might also consider running a number of
+	tests. See <a href="site:tests">Running Tests</a> for details.
+      </p>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.2 $
+  $Author: bablokb $
+-->
+
+<document id="tests">
+  <header>
+    <title>Running Tests</title>
+  </header>
+
+  <body>
+    <section id="prep">
+      <title>Preparing the Test-Environment</title>
+      <p>The im4java-distribution contains a number of tests. These
+	tests done't formally proove the correctness of the code,
+	they just show that the code compiles and runs. The
+	test-cases also serve as examples for the usage of im4java.
+      </p>
+
+      <p>To prepare the test-environmet, UN*X-users just run
+      </p>
+      <source>
+	make test-prepare
+      </source>
+      <p>Windows users run:
+      </p>
+      <source>
+	bin/test-prepare.bat
+      </source>
+    </section>
+
+    <section id="run">
+      <title>Executing Tests</title>
+      <p>To run the tests, you would run one of the following
+      commands:
+      </p>
+      <source>
+	java -jar im4java-version.jar help
+	java -jar im4java-version.jar all
+	java -jar im4java-version.jar 1 2 4 9 16
+      </source>
+      <p>The first command will print a list of available tests. The
+	second command will run all tests, while the last command will
+	only run the subset of tests given as arguments. Note that the
+	<a href="reference.html#tests">reference-section</a> also
+	has a list of all available tests.
+      </p>
+      <p>
+	If you downloaded and compiled the source-package, UN*X-users
+	can just run
+      </p>
+      <source>
+	make test
+      </source>
+      <p>Note that this will also automatically prepare the
+	test-environment.
+      </p>
+    </section>
+  </body>
+</document>

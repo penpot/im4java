@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+ Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+ $Revision: 1.6 $
+ $Author: bablokb $
+-->
+
+<site label="im4java" href="" tab=""
+  xmlns="http://apache.org/forrest/linkmap/1.0">
+
+  <!-- overview-tab -->
+  <overview label="Overview">
+    <welcome label="Welcome" href="index.html" description="Welcome to
+      the im4java project website"/> 
+    <relnotes label="Release Notes" href="relnotes.html" />
+    <roadmap  label="Roadmap"       href="roadmap.html" />
+  </overview>
+
+  <!-- installation-tab -->
+  <install label="Installation" tab="install"
+	href="install/">
+    <install     label="Installation"        href="index.html#install" />
+    <jre15       label="Support for JRE 1.5" href="index.html#jre15" />
+    <start       label="Getting Started"     href="index.html#start" />
+  </install>
+  
+  <!-- documentation-tab -->
+  <docs label="Documentation" tab="docs" href="docs/">
+    <index label="Overview"             href="index.html" />
+    <devguide  label="Developer's-Guide" href="dev-guide.html" />
+    <tests     label="Tests"             href="tests.html" />
+    <reference label="Reference"         href="reference.html" />
+    <newtools  label="Adding new Tools"  href="new-tools.html" />
+    <howtos    label="Howtos"           href="howtos.html" />
+    <ht-template label=""               href="howto-template.html" />
+    <faq       label="FAQs"             href="faq.html" />
+    <api       label="API"              href="ext:im4javaapi" />
+  </docs>
+
+  <!-- tool-tab -->
+  <tools label="Tools" tab="tools"    href="tools/">
+    <im       label="ImageMagick"     href="index.html#im" />
+    <gm       label="GraphicsMagick"  href="index.html#gm" />
+    <dcraw    label="dcraw"           href="index.html#dcraw" />
+    <ufraw    label="ufraw"           href="index.html#ufraw" />
+    <exiftool label="exiftool"        href="index.html#exiftool" />
+    <jpegtran label="jpegtran"        href="index.html#jpegtran" />
+  </tools>
+
+  <!-- API-tab -->
+  <api label="im4java-API" tab="api"  href="ext:im4javaapi" />
+
+
+  <!-- external references -->
+  <external-refs>
+    <maven           href="http://mvnrepository.com/artifact/org.im4java/im4java"/>
+    <mavenalt        href="http://maven.cedarsoft.com/content/repositories/thirdparty/"/>
+    <forrest         href="http://forrest.apache.org"/>
+    <jmagick         href="http://www.jmagick.org"/>
+    <jmagickpro      href="http://www.sourceforge.net/projects/jmagick"/>
+    <imagemagick     href="http://www.imagemagick.org"/>
+    <graphicsmagick  href="http://www.graphicsmagick.org/"/>
+    <dcraw           href="http://www.cybercom.net/~dcoffin/dcraw/"/>
+    <ufraw           href="http://ufraw.sourceforge.net"/>
+    <jpegtran        href="http://www.ijg.org/"/>
+    <exiftool        href="http://owl.phy.queensu.ca/~phil/exiftool/"/>
+    <sf              href="http://sourceforge.net"/>
+    <sflogo          href="http://sflogo.sourceforge.net/sflogo.php?group_id=251357&amp;type=5"/>
+    <im4javahome     href="http://im4java.sourceforge.net"/>
+    <im4javaapi      href="http://im4java.sourceforge.net/api/"/>
+    <project         href="http://sourceforge.net/projects/im4java/"/>
+    <download        href="http://sourceforge.net/project/showfiles.php?group_id=251357"/>
+    <mail            href="mailto:bablokb . at . users.sourceforge.net"/>
+
+    <natbraille      href="http://natbraille.free.fr"/>
+
+    <jumljni         href="https://sourceforge.net/mailarchive/message.php?msg_name=20cf28cd1002231148s33c99843q875f59906dd32b8b%40mail.gmail.com" />
+  </external-refs>
+
+</site>

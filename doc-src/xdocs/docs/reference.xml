@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE document PUBLIC "-//APACHE//DTD Documentation V2.0//EN"
+"http://forrest.apache.org/dtd/document-v20.dtd">
+<!--
+  Copyright (c) 2010-2010 by Bernhard Bablok (bablokb@users.sourceforge.net)
+
+  $Revision: 1.6 $
+  $Author: bablokb $
+-->
+
+<document>
+  <header>
+    <title>im4java Reference</title>
+  </header>
+
+  <body>
+    <section id="config">
+      <title>Configuration</title>
+      <p>
+	You can configure the behaviour of the im4java-library with
+	the following environment-variables and system-properties:
+      </p>
+      <dl>
+	<dt>IM4JAVA_TOOLPATH (environment)</dt>
+	<dd>Default searchpath for <a href="../tools/index.html">commandline
+	    tools</a>. Must use the platform-specific
+	  path-delimiter.
+	</dd>
+      </dl>
+      <dl>
+	<dt>im4java.useGM (system-property)</dt>
+	<dd>If true, use <a href="ext:graphicsmagick">GraphicsMagick</a>
+	  instead of <a href="ext:imagemagick">ImageMagick</a>.
+	</dd>
+      </dl>
+      <dl>
+	<dt>im4java.maxProcs (system-property)</dt>
+	<dd>The maximum number of asynchronous processes the
+	  <code>org.im4java.process.ProcessExecutor</code> will run
+	  concurrently.  If unset or if the 
+	  property has the value <em>auto</em>, the number returned by
+	  <code>Runtime.availableProcessors()</code> is used. Note
+	  that the ProcessExecutor will at least use one process.
+	</dd>
+      </dl>
+    </section>
+
+    <section id="tests">
+      <title>Test Cases</title>
+      <p>
+	The package <code>org.im4java.test</code> contains a growing
+	number of test-cases, demonstrating the various features of
+	the im4java-library. Here is a quick overview.
+      </p>
+      <dl>
+	<dt>TestCase1</dt><dd>Simple use of convert</dd>
+	<dt>TestCase2</dt><dd>Operation and sub-operations</dd>
+	<dt>TestCase3</dt><dd>Using montage</dd>
+	<dt>TestCase4</dt><dd>The ChannelMixer-class</dd>
+	<dt>TestCase5</dt><dd>Using mogrify</dd>
+	<dt>TestCase6</dt><dd>Using identify</dd>
+	<dt>TestCase7</dt><dd>Using composite</dd>
+	<dt>TestCase8</dt><dd>Using the Info-class</dd>
+	<dt>TestCase9</dt><dd>The NoiseFilter-class</dd>
+	<dt>TestCase10</dt><dd>Piping</dd>
+	<dt>TestCase11</dt><dd>Dynamic operations</dd>
+	<dt>TestCase12</dt><dd>Reading BufferedImage</dd>
+	<dt>TestCase13</dt><dd>Writing BufferedImage</dd>
+	<dt>TestCase14</dt><dd>GraphicsMagick</dd>
+	<dt>TestCase15</dt><dd>Using jpegtran</dd>
+	<dt>TestCase16</dt>
+	<dd>
+	  Asynchronous execution. Basic version.
+	</dd>
+	<dt>TestCase16a</dt>
+	<dd>
+	  Asynchronous execution. This version uses
+	  <code>Executors.newSingleThreadExecutor()</code> to aquire a
+	  <code>ExecutorService</code>.
+	</dd>
+	<dt>TestCase16b</dt>
+	<dd>
+	  Asynchronous execution. This version uses a
+	  <code>ProcessExecutor</code> to run at most two processes in
+	  parallel.
+	</dd>
+	<dt>TestCase17</dt><dd>Using ufraw-batch</dd>
+	<dt>TestCase18</dt><dd>Using exiftool</dd>
+	<dt>TestCase19</dt><dd>Using dcraw</dd>
+	<dt>TestCase20</dt><dd>Setting search PATHs</dd>
+	<dt>TestCase21</dt><dd>Parallel processes</dd>
+	<dt>TestCase22</dt><dd>Using the BatchConverter-class</dd>
+      </dl>
+    </section>
+  </body>
+</document>

@@ -1,0 +1,331 @@
+# Interface defintion for ImageMagick (Version 6.4.7)
+#
+# Syntax: IM-option varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.23 $
+#
+!toolName=ImageMagick
+#
+               -adaptive-blur Double:radius x Double:sigma
+               -adaptive-resize Integer:width x Integer:height @ Character:special
+               -adaptive-resize Integer:width x Integer:height @ String:special
+               -adaptive-sharpen Double:radius x Double:sigma
+               -adjoin
+               +adjoin
+               -affine Double:sx , Double:rx , Double:ry , Double:sy , Double:tx , Double:ty
+               -alpha String:type
+               -annotate Integer:xr x Integer:yr + Integer:x + Integer:y _ String:text
+               -antialias
+               +antialias
+               -append
+               +append
+               -attenuate Double:value
+               -authenticate String:password
+               -auto-gamma
+               -auto-level
+               -auto-orient
+               -average
+               -backdrop String:color
+               -background String:color
+               -bench Integer:iterations
+               -blend Integer:srcPercent x Integer:dstPercent
+               -bias Integer:value @ Boolean:percent
+               -black-point-compensation
+               -black-threshold Double:threshold @ Boolean:percent
+               -blue-primary Double:x , Double:y
+               -blue-shift Double:factor
+               -blur Double:radius x Double:sigma
+               -bordercolor String:color
+               -border Integer:width x Integer:height
+               -borderwidth Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -brightness-contrast Double:brightness x Double:contrast @ Boolean:percent
+               -cache Double:threshold
+               -caption String:text
+               -cdl String:filename
+               +channel
+               -channel String:type
+               -charcoal Integer:factor
+               -chop Integer:width x Integer:height + Integer:x + Integer:y @ Boolean:percent
+               -clamp
+               -clip
+               -clip-mask
+               -clip-path String:id
+               +clip-path String:id
+               +clone
+               -clone Integer:index1 , Integer:index2 , Integer:index3
+               -clone String:indexes
+               -clut
+               -coalesce
+               -colorize Integer:red , Integer:blue , Integer:green
+               -colormap String:type
+               -color-matrix String:matrix
+               -colors Integer:value
+               -colorspace String:value
+               -combine
+               -comment String:text
+               -compose String:operator
+               -composite
+               +compress
+               -compress String:type
+               -contrast
+               +contrast
+               -contrast-stretch Integer:blackPoint x Integer:whitePoint @ Boolean:percent
+               -convolve Integer:k1 , Integer:k2 , Integer:k3 , Integer:k4 , Integer:k5 , Integer:k6 , Integer:k7 , Integer:k8 , Integer:k9 , Integer:k10 , Integer:k11 , Integer:k12 , Integer:k13 , Integer:k14 , Integer:k15 , Integer:k16
+               -crop Integer:width x Integer:height + Integer:x + Integer:y @ Character:special
+               -crop Integer:width x Integer:height + Integer:x + Integer:y @ String:special
+               -cycle Integer:amount
+               +debug
+               -debug String:events
+               -decipher String:filename
+               -deconstruct
+               +define String:key
+               -define String:keyValue
+               -delay Integer:ticks x Integer:ticksPerSecond @ Character:special
+               +delete
+               -delete Integer:index1 , Integer:index2 , Integer:index3
+               -delete String:indexes
+               -density Integer:width x Integer:height
+               -depth Integer:value
+               -descend
+               -deskew Double:threshold
+               -despeckle
+               -direction String:type
+               -displace Double:horizontalScale x Double:verticalScale
+               -display String:host : Integer:display . Integer:screen
+               +dispose
+               -dispose String:method
+               -dissimilarity-threshold Double:value
+               -dissolve Integer:percent
+               -distort String:method _ String:arguments
+               +distort String:method _ String:arguments
+               +dither
+               -dither String:method
+               -draw String:string
+               -duplicate Integer:count , String:indices
+               +duplicate
+               -edge Double:radius
+               -emboss Double:radius
+               -encipher String:filename
+               -encoding String:type
+               +endian
+               -endian String:type
+               -enhance
+               -equalize
+               -evaluate String:operator _ String:constant
+               -evaluate-sequence String:operator
+               -extent Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -extract Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -family String:fontFamily
+               -features String:distance
+               -fft
+               -fill String:color
+               -filter String:type
+               -flatten
+               -flip
+               -floodfill + Integer:x + Integer:y _ String:color
+               -flop
+               -font String:name
+               -foreground String:color
+               -format String:type
+               -frame Integer:width x Integer:height + Integer:outerBevelWidth + Integer:innerBevelWidth
+               -function String:name _ String:parameter
+               -fuzz Double:distance @ Boolean:percent
+               -fx String:expression
+               -gamma Double:value
+               +gamma Double:value
+               -gaussian-blur Double:radius x Double:sigma
+               -geometry Integer:width x Integer:height + Integer:x + Integer:y
+               -gravity String:type
+               -green-primary Double:x , Double:y
+               -help
+               -hald-clut
+               -highlight-color String:color
+               -iconGeometry Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -iconic
+               -identify
+               -ift
+               -immutable
+               -implode Double:factor
+               -insert Integer:index
+               -intent String:type
+               -interlace String:type
+               -interline-spacing Double:value
+               -interpolate String:type
+               -interword-spacing Double:value
+               -kerning Integer:value
+               +label
+               -label String:name
+               -lat Integer:width x Integer:height + Integer:offset @ Boolean:percent
+               -layers String:method
+               -level-colors String:black_color , String:white_color
+               +level-colors String:black_color , String:white_color
+               -level Double:black_point , Double:white_point @ Boolean:percent , Double:gamma
+               +level Double:black_point , Double:white_point @ Boolean:percent , Double:gamma
+               -limit String:type String:value
+               -linear-stretch Double:blackPoint x Double:whitePoint @ Boolean:percent
+               -linewidth
+               -liquid-rescale Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -list String:type
+               -log String:text
+               -loop Integer:iterations
+               -lowlight-color String:color
+               -magnify Double:factor
+               +map
+               -map String:components
+               +mask
+               -mask String:filename
+               -mattecolor String:color
+               -median Double:radius
+               -metric String:type
+               -mode String:value
+               -modulate Double:brightness , Double:saturation , Double:hue
+               -monitor
+               -monochrome
+               -morph Integer:frames
+               -morphology String:method _ String:kernel
+               -mosaic
+               -motion-blur Double:radius x Double:sigma + Double:angle
+               -name
+               -negate
+               +negate
+               -noise Double:radius
+               +noise String:type
+               -normalize
+               -opaque String:color
+               +opaque String:color
+               -ordered-dither String:threshold_map , String:level
+               -orient String:imageOrientation
+               +page
+               -page Integer:width x Integer:height + Integer:x + Integer:y @ Character:special
+               -page Integer:width x Integer:height + Integer:x + Integer:y @ String:special
+               -paint Double:radius
+               -path String:path
+               -passphrase String:filename
+               -pause Integer:seconds
+               -perceptible Double:epsilon
+               -ping
+               -pointsize Integer:value
+               -polaroid Double:angle
+               +polaroid
+               -poly String:args
+               -posterize Integer:levels
+               -precision Integer:digits
+               -preview String:type
+               -print String:text
+               -process String:command
+               -profile String:filename
+               +profile String:profileName
+               -quality Double:value
+               -quantize String:colorspace
+               -quiet
+               -radial-blur Double:angle
+               -raise Integer:width x Integer:height
+               +raise Integer:width x Integer:height
+               -random-threshold Double:low x Double:high @ Boolean:percent
+               -recolor String:matrix
+               -red-primary Double:x , Double:y
+               -regard-warnings
+               -region Integer:width x Integer:height + Integer:x + Integer:y
+               +remap
+               -remap String:filename
+               -remote
+               -render
+               +render
+               +repage
+               -repage Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -resample Integer:horizontal x Integer:vertical
+               -resize Integer:width x Integer:height @ Character:special
+               -resize Integer:width x Integer:height @ String:special
+               -respect-parentheses
+               -respect-parenthesis
+               -reverse
+               -roll Integer:x + Integer:y
+               -rotate Double:degrees @ Character:special
+               -sample Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -sampling-factor Double:horizontalFactor x Double:verticalFactor
+               -selective-blur Double:radius x Double:sigma + Double:threshold
+               -sparse-color String:method _ String:cinfo
+               -scale Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -scene Integer:value
+               -screen
+               -seed
+               -segment Integer:clusterThreshold x Double:smoothingThreshold
+               -separate
+               -sepia-tone Double:threshold
+               -set String:attribute _ String:value
+               -shade Double:azimuth x Double:elevation
+               +shade Double:azimuth x Double:elevation
+               -shadow Integer:percentOpacity x Double:sigma + Integer:x + Integer:y @ Boolean:percent
+               -shared-memory
+               -sharpen Double:radius x Double:sigma
+               -shave Integer:width x Integer:height @ Boolean:percent
+               -shear Double:xDegrees x Double:yDegrees
+               -sigmoidal-contrast Double:contrast x Double:midPoint
+               +sigmoidal-contrast Double:contrast x Double:midPoint
+               -silent
+               -size Integer:width x Integer:height + Integer:offset
+               -sketch Double:radius x Double:sigma + Double:angle
+               -smush Integer:offset
+               -snaps Integer:value
+               -solarize Double:threshold
+               -splice Double:width x Double:height + Double:x + Double:y @ Boolean:percent
+               -spread Integer:amount
+               -stegano Integer:offset
+               -stereo Integer:x + Integer:y
+               -statistic String:type _ Integer:width x Integer:height + Integer:x + Integer:y @ String:special
+               -storage-type String:type
+               -stretch String:fontStretchType
+               -strip
+               -stroke String:color
+               -strokewidth Integer:value
+               -style String:fontStyle
+               -subimage-search
+               +swap
+               -swap Integer:pos1 , Integer:pos2
+               -swirl Double:degrees
+               -synchronize
+               -taint
+               -text-font String:name
+               -texture String:filename
+               -threshold Integer:red , Integer:green , Integer:blue , Integer:opacity @ Boolean:percent
+               -thumbnail Integer:width x Integer:height @ Character:special
+               -thumbnail Integer:width x Integer:height @ String:special
+               -tile Integer:width x Integer:height + Integer:xOffset + Integer:yOffset
+               -tile-offset Integer:x + Integer:y
+               -tile String:filename
+               -tint Double:value
+               -title String:text
+               -transform
+               -transparent-color String:color
+               -transparent String:color
+               -transpose
+               -transverse
+               -treedepth Integer:value
+               -trim
+               -type String:type
+               -undercolor String:color
+               -unique-colors
+               -units String:type
+               -unsharp Double:radius x Double:sigma + Double:amount + Double:threshold
+               -update Integer:seconds
+               -verbose
+               -version
+               -view String:text
+               -vignette Double:radius x Double:sigma + Double:x + Double:y @ Boolean:percent
+               -virtual-pixel String:method
+               -visual String:type
+               -watermark Double:brightness
+               -wave Double:amplitude x Double:wavelength
+               -weight String:fontWeight
+               -weight Integer:fontWeight
+               -white-point Double:x , Double:y
+               -white-threshold Double:threshold @ Boolean:percent
+               -window-group
+               -window String:id
+               -write String:filename
+               +write String:filename

@@ -1,0 +1,55 @@
+# Interface defintion for dcraw
+#
+# Syntax: option|methodName [@] varType:varName operator [...]
+#
+#         Operator: _     space
+#                   @     attach without space
+#                   else  given character
+#
+# $Author: bablokb $
+# $Revision: 1.2 $
+#
+!validInterface=true
+!toolName=dcraw
+#
+       -v|verbose
+       -c|write2stdout
+       -e|extractThumbnail
+       -z|changeTimestamp
+       -i|identify
+#
+       -P|setDeadpixelFile String:pFile
+       -K|setDarkframeFile String:pFile
+       -k|darkness Double:pDdarkness
+       -S|saturation Double:pSaturation
+       -n|noiseThreshold Double:pThreshold
+       -C|colorFactor Double:pRedFactor Double:pBlueFactor
+       -H|clipMethod Integer:pMethod
+#
+       -w|useCameraWB
+       -a|useAverageWB
+       -A|calcAverageWB Integer:pLeft _ Integer:pTop _ Integer:pWidth _ Integer:pHeight
+       -r|setWB Double:pMult0 _ Double:pMult1 _ Double:pMult2 _ Double:pMult3
+       +M|useColorMatrix
+       -M|ignoreColorMatrix
+       -o|setOutputColorSpace Integer:pMethod
+       -o|setOutputColorSpace String:pColorProfileFile
+       -p|setCameraColorSpace String:pColorProfileFile
+#
+       -d|grayscale
+       -D|grayscaleRaw
+       -h|halfSize
+       -q|setInterpolationMethod Integer:pMethod
+       -f|use4ColorRGB
+       -m|cleanupPasses Integer:pPasses
+#
+       -W|fixedWhiteLevel
+       -b|brightness Double:pLevel
+       -g|setGamma Double:pPower _ Double:pToeSlope
+       -6|depth16withGamma
+       -4|depth16
+       -T|createTIFF
+       -t|flipImage Integer:pValue
+       -j|tilt45
+       -s|selectImage Integer:pNumber
+       -s|selectAllImages
