@@ -80,7 +80,7 @@ public class  Info {
   */
 
   private LinkedList<Hashtable<String,String>> iAttribList = 
-                                     new LinkedList<Hashtable<String,String>>();
+    new LinkedList<Hashtable<String,String>>();
 
   //////////////////////////////////////////////////////////////////////////////
 
@@ -169,7 +169,7 @@ public class  Info {
   */
 
   public Info(String pImage, InputStream pInput,
-                                            boolean basic) throws InfoException {
+              boolean basic) throws InfoException {
     if (pInput != null && !(pImage.equals("-") || pImage.endsWith(":-"))) {
       throw new IllegalArgumentException("illegal filename for piped input");
     }
@@ -191,7 +191,7 @@ public class  Info {
   */
 
   private void getCompleteInfo(String pImage, InputStream pInput)
-                                                          throws InfoException {
+    throws InfoException {
     IMOperation op = new IMOperation();
     op.verbose();
     op.addImage(pImage);
@@ -202,32 +202,32 @@ public class  Info {
       identify.setOutputConsumer(output);
       if (pInput != null) {
         Pipe inputPipe = new Pipe(pInput,null);
-	identify.setInputProvider(inputPipe);
+        identify.setInputProvider(inputPipe);
       }
       identify.run(op);
       ArrayList<String> cmdOutput = output.getOutput();
-
+      
       StringBuilder lineAccu = new StringBuilder(80);
       for (String line:cmdOutput) {
-	if (line.length() == 0) {
-	  // accumulate empty line as part of current attribute
-	  lineAccu.append("\n\n");
-	} else if (line.indexOf(':') == -1) {
-	  // interpret this as a continuation-line of the current attribute
-	  lineAccu.append("\n").append(line);
-	} else if (lineAccu.length() > 0) {
-	  // new attribute, process old attribute first
-	  parseLine(lineAccu.toString());
-	  lineAccu = new StringBuilder(80);
-	  lineAccu.append(line);
-	} else {
+        if (line.length() == 0) {
+          // accumulate empty line as part of current attribute
+          lineAccu.append("\n\n");
+        } else if (line.indexOf(':') == -1) {
+          // interpret this as a continuation-line of the current attribute
+          lineAccu.append("\n").append(line);
+        } else if (lineAccu.length() > 0) {
+          // new attribute, process old attribute first
+          parseLine(lineAccu.toString());
+          lineAccu = new StringBuilder(80);
+          lineAccu.append(line);
+        } else {
           // new attribute, but nothing old to process
-	  lineAccu.append(line);
-	}
+          lineAccu.append(line);
+        }
       }
       // process last item
       if (lineAccu.length() > 0) {
-	parseLine(lineAccu.toString());
+        parseLine(lineAccu.toString());
       }
 
       // finish and add last hashtable to linked-list
@@ -278,13 +278,19 @@ public class  Info {
     if (pLine.startsWith("Image:")) {
       // start of a new scene
       if (iAttributes != null) {
-	addBaseInfo();
-	iAttribList.add(iAttributes);
+        addBaseInfo();
+        iAttribList.add(iAttributes);
       }
       iAttributes = new Hashtable<String,String>();
-    }
-    int indent = pLine.indexOf(pLine.trim())/2;
 
+      // in ImageMagick v7 we need to skip processing this line when
+      // we found the Image: prefix.
+      if (Boolean.getBoolean("im4java.useV7")) {
+        return;
+      }
+    }
+
+    int indent = pLine.indexOf(pLine.trim())/2;
     String[] parts = pLine.trim().split(": ",2);
 
     // check indentation level and remove prefix if necessary
@@ -292,12 +298,12 @@ public class  Info {
       // remove tokens from iPrefix
       int colonIndex=iPrefix.length()-1;
       for (int i=0;i<iOldIndent-indent;++i) {
-	colonIndex = iPrefix.lastIndexOf(':',colonIndex-1);
+        colonIndex = iPrefix.lastIndexOf(':',colonIndex-1);
       }
       if (colonIndex == -1) {
-	iPrefix="";
+        iPrefix="";
       } else {
-	iPrefix=iPrefix.substring(0,colonIndex+1);
+        iPrefix=iPrefix.substring(0,colonIndex+1);
       }
     }
     iOldIndent = indent;
@@ -337,7 +343,7 @@ public class  Info {
       identify.setOutputConsumer(output);
       if (pInput != null) {
         Pipe inputPipe = new Pipe(pInput,null);
-	identify.setInputProvider(inputPipe);
+        identify.setInputProvider(inputPipe);
       }
       identify.run(op);
 
